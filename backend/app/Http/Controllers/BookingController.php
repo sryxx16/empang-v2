@@ -25,4 +25,29 @@ class BookingController extends Controller
             'data' => $booking
         ], 201);
     }
+
+    public function checkStatus($nama)
+{
+    // Mencari data berdasarkan nama_peserta (menggunakan 'like' agar pencarian lebih fleksibel)
+    $booking = \App\Models\Booking::where('nama_peserta', 'like', '%' . $nama . '%')
+                ->latest() // Ambil yang paling baru didaftarkan
+                ->first();
+
+    if (!$booking) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Data tidak ditemukan. Pastikan nama sesuai saat mendaftar.'
+        ], 404);
+    }
+
+    return response()->json([
+        'success' => true,
+        'data' => [
+            'nama' => $booking->nama_peserta,
+            'tanggal' => $booking->tanggal_lomba,
+            'status' => $booking->status, // Defaultnya 'pending'
+            'dibuat_pada' => $booking->created_at->format('d M Y H:i')
+        ]
+    ]);
+}
 }

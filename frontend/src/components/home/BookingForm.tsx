@@ -1,11 +1,20 @@
 import React, { useState } from "react";
-import { Calendar, User, CheckCircle2, Users, Wallet } from "lucide-react";
+import axios from "axios";
+import {
+  Calendar,
+  User,
+  CheckCircle2,
+  Users,
+  Wallet,
+  Loader2,
+} from "lucide-react";
 
-// Simulasi Data Jadwal dari Panitia (Nantinya data ini ditarik dari Laravel)
+// Kita tambahkan kolom 'tanggal_db' agar formatnya sesuai dengan tipe 'date' di database Laravel (YYYY-MM-DD)
 const JADWAL_PANITIA = [
   {
     id: "1",
     hari: "Minggu, 19 April 2026",
+    tanggal_db: "2026-04-19",
     kategori: "Lomba Mingguan",
     harga: 150000,
     terdaftar: 12,
@@ -13,6 +22,7 @@ const JADWAL_PANITIA = [
   {
     id: "2",
     hari: "Sabtu, 25 April 2026",
+    tanggal_db: "2026-04-25",
     kategori: "Galatama Spesial",
     harga: 250000,
     terdaftar: 8,
@@ -20,6 +30,7 @@ const JADWAL_PANITIA = [
   {
     id: "3",
     hari: "Minggu, 26 April 2026",
+    tanggal_db: "2026-04-26",
     kategori: "Lomba Mingguan",
     harga: 150000,
     terdaftar: 5,
@@ -27,40 +38,69 @@ const JADWAL_PANITIA = [
 ];
 
 export default function BookingForm() {
-  // State untuk menampung inputan form
   const [formData, setFormData] = useState({
     nama_peserta: "",
     jadwal_id: "",
   });
 
-  // State untuk menampung data jadwal yang sedang dipilih
-  const [selectedJadwal, setSelectedJadwal] = useState<{
-    id: string;
-    hari: string;
-    kategori: string;
-    harga: number;
-    terdaftar: number;
-  } | null>(null);
+  const [selectedJadwal, setSelectedJadwal] = useState<any>(null);
 
-  // Fungsi menangani ketikan / pilihan user
+  // State baru untuk mengatur loading dan pesan sukses/error
+  const [isLoading, setIsLoading] = useState(false);
+  const [message, setMessage] = useState({ type: "", text: "" });
+
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
 
-    // Jika yang diubah adalah jadwal, update info harga & peserta otomatis
     if (name === "jadwal_id") {
       const jadwal = JADWAL_PANITIA.find((j) => j.id === value);
       setSelectedJadwal(jadwal || null);
     }
   };
 
-  // Fungsi saat tombol daftar diklik
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Siap dikirim via Axios:", formData);
-    // Logika Axios akan kita taruh di sini
+    setIsLoading(true);
+    setMessage({ type: "", text: "" });
+
+    // Merakit paket data agar sesuai dengan permintaan Controller Laravel kita sebelumnya
+    const payload = {
+      nama_peserta: formData.nama_peserta,
+      tanggal_lomba: selectedJadwal.tanggal_db,
+      nomor_lapak: "Diundi di lokasi", // Karena diundi, kita kirim teks ini ke database
+    };
+
+    try {
+      // Mengirim data ke API Laravel (Pastikan port Laravel kamu benar, biasanya 8000 atau lewat Sail)
+      const response = await axios.post(
+        "http://localhost/api/bookings",
+        payload,
+      );
+
+      // Jika berhasil
+      setMessage({
+        type: "success",
+        text: response.data.message || "Booking berhasil disimpan!",
+      });
+
+      // Kosongkan form setelah sukses
+      setFormData({ nama_peserta: "", jadwal_id: "" });
+      setSelectedJadwal(null);
+    } catch (error: any) {
+      // Jika gagal (misal server mati atau validasi salah)
+      console.error("Error Detail:", error);
+      setMessage({
+        type: "error",
+        text:
+          error.response?.data?.message ||
+          "Terjadi kesalahan saat menghubungi server.",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -70,8 +110,16 @@ export default function BookingForm() {
         MULAI BOOKING
       </h2>
 
+      {/* Menampilkan Notifikasi Sukses / Error */}
+      {message.text && (
+        <div
+          className={`p-4 mb-6 rounded-xl font-bold text-sm ${message.type === "success" ? "bg-green-50 text-green-600 border border-green-200" : "bg-red-50 text-red-600 border border-red-200"}`}
+        >
+          {message.text}
+        </div>
+      )}
+
       <form className="space-y-6 relative z-10" onSubmit={handleSubmit}>
-        {/* Input Nama Lengkap */}
         <div>
           <label className="block text-sm font-bold text-slate-700 mb-2 uppercase tracking-wide">
             Nama Lengkap
@@ -93,7 +141,6 @@ export default function BookingForm() {
           </div>
         </div>
 
-        {/* Pilihan Jadwal Panitia */}
         <div>
           <label className="block text-sm font-bold text-slate-700 mb-2 uppercase tracking-wide">
             Pilih Tanggal Lomba
@@ -122,7 +169,6 @@ export default function BookingForm() {
           </div>
         </div>
 
-        {/* Tampil Dinamis: Harga dan Jumlah Peserta */}
         {selectedJadwal && (
           <div className="grid grid-cols-2 gap-4 pt-2">
             <div className="bg-red-50 border border-red-100 p-4 rounded-xl">
@@ -146,15 +192,26 @@ export default function BookingForm() {
           </div>
         )}
 
+        {/* Tombol Loading State */}
         <button
           type="submit"
-          className="w-full bg-[#ff4d4d] text-white font-black py-4 rounded-xl hover:bg-[#e64444] transition-all shadow-lg shadow-red-200 mt-6 flex items-center justify-center gap-2 hover:scale-[1.02]"
+          disabled={isLoading}
+          className={`w-full text-white font-black py-4 rounded-xl transition-all shadow-lg mt-6 flex items-center justify-center gap-2 
+            ${isLoading ? "bg-slate-400 cursor-not-allowed" : "bg-[#ff4d4d] hover:bg-[#e64444] shadow-red-200 hover:scale-[1.02]"}`}
         >
-          <CheckCircle2 size={22} strokeWidth={3} />
-          LANJUTKAN PEMBAYARAN
+          {isLoading ? (
+            <>
+              <Loader2 size={22} className="animate-spin" />
+              MEMPROSES DATA...
+            </>
+          ) : (
+            <>
+              <CheckCircle2 size={22} strokeWidth={3} />
+              LANJUTKAN PEMBAYARAN
+            </>
+          )}
         </button>
 
-        {/* Note Lapak */}
         <p className="text-center text-xs text-slate-400 font-bold mt-4">
           * Nomor lapak akan diundi saat registrasi ulang di lokasi perlombaan.
         </p>

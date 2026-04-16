@@ -12,7 +12,7 @@ export default function Navbar() {
             <div className="w-8 h-8 rounded-full bg-blue-500 border-2 border-white shadow-sm"></div>
           </div>
           <span className="text-2xl font-black text-slate-900 tracking-tighter uppercase">
-            COMBRO
+            COMBRO FISHING
           </span>
         </Link>
 

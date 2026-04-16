@@ -12,13 +12,11 @@ export default function HeroSection() {
 
         <h1 className="text-6xl md:text-8xl font-black text-slate-900 leading-[0.9] tracking-tighter uppercase">
           Mancing Nyaman, <br />
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#ff4d4d] to-red-600">
-            Tanpa Ribet Antre
-          </span>
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#ff4d4d] to-red-600"></span>
         </h1>
 
         <h2 className="text-2xl md:text-3xl font-bold text-slate-700">
-          Amankan Lapak Sekarang!
+          Amankan pendaftaran Sekarang!
         </h2>
 
         <p className="text-lg text-slate-500 font-medium leading-relaxed max-w-xl">

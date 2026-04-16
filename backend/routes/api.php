@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BookingController;
+use App\Http\Controllers\SettingController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -17,6 +18,11 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
 
-    // Nanti kita tambah route untuk ambil semua data booking di sini
-    // Route::get('/admin/bookings', [BookingController::class, 'index']);
+    Route::get('/admin/dashboard', [BookingController::class, 'index']);
+    Route::get('/admin/bookings', [BookingController::class, 'index']);
+    Route::put('/admin/bookings/{id}/verify', [BookingController::class, 'verifyBooking']);
+    Route::get('/admin/reports', [BookingController::class, 'report']);
+
+    Route::get('/admin/settings', [SettingController::class, 'index']);
+    Route::put('/admin/settings', [SettingController::class, 'update']);
 });

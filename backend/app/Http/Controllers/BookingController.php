@@ -7,23 +7,30 @@ use App\Models\Booking;
 
 class BookingController extends Controller
 {
-    public function store(Request $request)
+   public function store(Request $request)
     {
-        // 1. Validasi: Pastikan React mengirim data yang lengkap
-        $validatedData = $request->validate([
-            'nama_peserta' => 'required|string|max:255',
-            'tanggal_lomba' => 'required|date',
-            'nomor_lapak' => 'required|string',
+        $request->validate([
+            'nama_peserta' => 'required',
+            'tanggal_lomba' => 'required',
+            'nomor_lapak' => 'required',
         ]);
 
-        // 2. Simpan ke Database (status_pembayaran otomatis 'pending' sesuai migration)
-        $booking = Booking::create($validatedData);
+        $booking = new \App\Models\Booking();
+        $booking->nama_peserta = $request->nama_peserta;
+        $booking->tanggal_lomba = $request->tanggal_lomba;
+        $booking->nomor_lapak = $request->nomor_lapak;
 
-        // 3. Beri jawaban (Response) ke React bahwa proses sukses
+        // ----------------------------------------------------
+        // TAMBAHKAN BARIS INI AGAR STATUSNYA TIDAK KOSONG
+        $booking->status = 'pending';
+        // ----------------------------------------------------
+
+        $booking->save();
+
         return response()->json([
-            'message' => 'Booking berhasil dibuat! Silakan lanjutkan pembayaran.',
-            'data' => $booking
-        ], 201);
+            'success' => true,
+            'message' => 'Booking berhasil disimpan!'
+        ]);
     }
 
     public function checkStatus($nama)
@@ -50,4 +57,63 @@ class BookingController extends Controller
         ]
     ]);
 }
+
+public function index()
+    {
+        // Ambil semua data pendaftaran dari yang paling baru
+        $bookings = \App\Models\Booking::latest()->get();
+
+        // Langsung kembalikan dalam format JSON
+        return response()->json($bookings);
+    }
+
+    // 2. Mengubah status pendaftar menjadi 'verified'
+    public function verifyBooking($id)
+    {
+        $booking = \App\Models\Booking::find($id);
+
+        if (!$booking) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Data tiket tidak ditemukan.'
+            ], 404);
+        }
+
+        // Ubah statusnya
+        $booking->status = 'verified';
+        $booking->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Tiket atas nama ' . $booking->nama_peserta . ' berhasil diverifikasi!'
+        ]);
+    }
+
+    // 3. Mengambil data khusus Laporan Keuangan & Peserta
+    public function report()
+    {
+        // Asumsi harga tiket (bisa diubah sesuai kebutuhan)
+        $hargaTiket = 100000;
+
+        // Hitung statistik
+        $totalPendaftar = \App\Models\Booking::count();
+        $pesertaLunas = \App\Models\Booking::where('status', 'verified')->count();
+        $pesertaPending = \App\Models\Booking::where('status', 'pending')->count();
+
+        // Hitung pendapatan (hanya dari yang sudah lunas)
+        $totalPendapatan = $pesertaLunas * $hargaTiket;
+
+        // Ambil daftar nama yang sudah lunas saja untuk dicetak
+        $daftarLunas = \App\Models\Booking::where('status', 'verified')->latest()->get();
+
+        return response()->json([
+            'statistik' => [
+                'total_pendaftar' => $totalPendaftar,
+                'lunas' => $pesertaLunas,
+                'pending' => $pesertaPending,
+                'pendapatan' => $totalPendapatan
+            ],
+            'peserta' => $daftarLunas
+        ]);
+    }
 }

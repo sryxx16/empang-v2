@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\LombaController;
+use App\Http\Controllers\RekapController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -31,4 +32,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/admin/lombas', [LombaController::class, 'index']);
     Route::post('/admin/lombas', [LombaController::class, 'store']);
     Route::get('/admin/lombas/{id}', [LombaController::class, 'show']);
+
+    Route::get('/admin/rekaps/{lomba_id}', [RekapController::class, 'getByLomba']);
+    Route::post('/admin/rekaps', [RekapController::class, 'store']);
 });

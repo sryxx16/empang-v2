@@ -7,39 +7,35 @@ use App\Models\Setting;
 
 class SettingController extends Controller
 {
-    // Mengambil data pengaturan
     public function index()
     {
-        // Karena lombanya cuma 1, kita ambil baris pertama di database.
-        // Kalau tabelnya masih kosong, otomatis buat data default.
         $setting = Setting::firstOrCreate(
             ['id' => 1],
             [
-                'nama_lomba' => 'Lomba Mancing Combro Akbar',
-                'tanggal_lomba' => '2026-05-01',
-                'harga_tiket' => 100000,
-                'kuota_peserta' => 50
+                'nama_pemancingan' => 'Pemancingan Combro',
+                'nomor_wa' => '6281234567890',
+                'info_rekening' => 'BCA 123456789 a.n Udin',
+                'peraturan_empang' => "1. Dilarang pakai umpan hidup\n2. Dilarang mabuk\n3. Keputusan panitia mutlak"
             ]
         );
 
         return response()->json($setting);
     }
 
-    // Menyimpan perubahan dari React
     public function update(Request $request)
     {
-        $setting = Setting::find(1); // Selalu ambil ID 1
+        $setting = Setting::find(1);
 
         $setting->update([
-            'nama_lomba' => $request->nama_lomba,
-            'tanggal_lomba' => $request->tanggal_lomba,
-            'harga_tiket' => $request->harga_tiket,
-            'kuota_peserta' => $request->kuota_peserta,
+            'nama_pemancingan' => $request->nama_pemancingan,
+            'nomor_wa' => $request->nomor_wa,
+            'info_rekening' => $request->info_rekening,
+            'peraturan_empang' => $request->peraturan_empang,
         ]);
 
         return response()->json([
             'success' => true,
-            'message' => 'Pengaturan lomba berhasil diperbarui!'
+            'message' => 'Pengaturan Web berhasil diperbarui!'
         ]);
     }
 }

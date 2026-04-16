@@ -1,7 +1,12 @@
 import React from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { LayoutDashboard, FileText, LogOut, Settings } from "lucide-react";
-
+import {
+  LayoutDashboard,
+  FileText,
+  Settings,
+  Camera,
+  LogOut,
+} from "lucide-react";
 export default function AdminLayout({
   children,
 }: {
@@ -64,6 +69,12 @@ export default function AdminLayout({
             }`}
           >
             <Settings size={20} /> Pengaturan Lomba
+          </Link>
+          <Link
+            to="/admin/kasir"
+            className={`w-full flex items-center gap-3 p-3 rounded-xl font-bold transition-all ${isActive("/admin/kasir") ? "bg-[#ff4d4d] text-white shadow-lg" : "text-slate-400 hover:text-white hover:bg-slate-800"}`}
+          >
+            <Camera size={20} /> Scan & Kasir
           </Link>
         </nav>
 

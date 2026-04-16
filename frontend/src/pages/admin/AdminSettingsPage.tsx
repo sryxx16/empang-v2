@@ -5,19 +5,19 @@ import {
   Settings,
   Save,
   Loader2,
-  Trophy,
-  Calendar,
-  Ticket,
-  Users,
+  Phone,
+  CreditCard,
+  AlignLeft,
+  Building,
 } from "lucide-react";
 import AdminLayout from "../../components/admin/AdminLayout";
 
 export default function AdminSettingsPage() {
   const [formData, setFormData] = useState({
-    nama_lomba: "",
-    tanggal_lomba: "",
-    harga_tiket: 0,
-    kuota_peserta: 0,
+    nama_pemancingan: "",
+    nomor_wa: "",
+    info_rekening: "",
+    peraturan_empang: "",
   });
 
   const [isLoading, setIsLoading] = useState(true);
@@ -38,12 +38,11 @@ export default function AdminSettingsPage() {
       const response = await axios.get("http://localhost/api/admin/settings", {
         headers: { Authorization: `Bearer ${token}` },
       });
-      // Masukkan data dari database ke dalam form
       setFormData({
-        nama_lomba: response.data.nama_lomba,
-        tanggal_lomba: response.data.tanggal_lomba || "",
-        harga_tiket: response.data.harga_tiket,
-        kuota_peserta: response.data.kuota_peserta,
+        nama_pemancingan: response.data.nama_pemancingan || "",
+        nomor_wa: response.data.nomor_wa || "",
+        info_rekening: response.data.info_rekening || "",
+        peraturan_empang: response.data.peraturan_empang || "",
       });
     } catch (err) {
       console.error("Gagal mengambil pengaturan", err);
@@ -64,9 +63,8 @@ export default function AdminSettingsPage() {
           headers: { Authorization: `Bearer ${token}` },
         },
       );
-
       if (response.data.success) {
-        alert(response.data.message); // Notifikasi sukses!
+        alert(response.data.message);
       }
     } catch (err) {
       console.error("Gagal menyimpan pengaturan", err);
@@ -76,15 +74,10 @@ export default function AdminSettingsPage() {
     }
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]:
-        name === "harga_tiket" || name === "kuota_peserta"
-          ? Number(value)
-          : value,
-    });
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   if (isLoading) {
@@ -103,117 +96,116 @@ export default function AdminSettingsPage() {
         <header className="mb-10">
           <h1 className="text-3xl font-black text-slate-900 tracking-tight flex items-center gap-3 uppercase">
             <Settings className="text-[#ff4d4d]" size={32} />
-            Pengaturan Lomba
+            Pengaturan Website
           </h1>
           <p className="text-slate-500 font-medium mt-2">
-            Sesuaikan informasi utama perlombaan di sini. Perubahan akan
-            langsung terlihat di Landing Page.
+            Sesuaikan informasi utama, kontak WhatsApp, dan peraturan empang
+            untuk Landing Page.
           </p>
         </header>
 
-        <div className="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden max-w-3xl">
+        <div className="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden max-w-4xl">
           <form onSubmit={handleSave} className="p-8 space-y-6">
-            {/* Input Nama Lomba */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Nama Pemancingan */}
+              <div>
+                <label className="block text-xs font-black text-slate-400 mb-2 uppercase tracking-widest">
+                  Nama Pemancingan
+                </label>
+                <div className="relative">
+                  <Building
+                    className="absolute left-4 top-4 text-slate-400"
+                    size={20}
+                  />
+                  <input
+                    type="text"
+                    name="nama_pemancingan"
+                    value={formData.nama_pemancingan}
+                    onChange={handleChange}
+                    className="w-full pl-12 pr-4 py-4 rounded-2xl border border-slate-200 focus:ring-4 focus:ring-red-100 focus:border-[#ff4d4d] outline-none transition-all font-bold text-slate-700 bg-slate-50"
+                    required
+                  />
+                </div>
+              </div>
+
+              {/* Nomor WA */}
+              <div>
+                <label className="block text-xs font-black text-slate-400 mb-2 uppercase tracking-widest">
+                  Nomor WhatsApp Admin (Awal 62)
+                </label>
+                <div className="relative">
+                  <Phone
+                    className="absolute left-4 top-4 text-slate-400"
+                    size={20}
+                  />
+                  <input
+                    type="text"
+                    name="nomor_wa"
+                    value={formData.nomor_wa}
+                    onChange={handleChange}
+                    placeholder="6281234567890"
+                    className="w-full pl-12 pr-4 py-4 rounded-2xl border border-slate-200 focus:ring-4 focus:ring-red-100 focus:border-[#ff4d4d] outline-none transition-all font-bold text-slate-700 bg-slate-50"
+                    required
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Info Rekening */}
             <div>
               <label className="block text-xs font-black text-slate-400 mb-2 uppercase tracking-widest">
-                Nama Lomba
+                Info Rekening / Dana
               </label>
               <div className="relative">
-                <Trophy
+                <CreditCard
                   className="absolute left-4 top-4 text-slate-400"
                   size={20}
                 />
                 <input
                   type="text"
-                  name="nama_lomba"
-                  value={formData.nama_lomba}
+                  name="info_rekening"
+                  value={formData.info_rekening}
                   onChange={handleChange}
+                  placeholder="BCA 1234567 a.n Udin"
                   className="w-full pl-12 pr-4 py-4 rounded-2xl border border-slate-200 focus:ring-4 focus:ring-red-100 focus:border-[#ff4d4d] outline-none transition-all font-bold text-slate-700 bg-slate-50"
-                  required
                 />
               </div>
             </div>
 
-            {/* Input Tanggal Lomba */}
+            {/* Peraturan Empang */}
             <div>
               <label className="block text-xs font-black text-slate-400 mb-2 uppercase tracking-widest">
-                Tanggal Lomba
+                Peraturan & Tata Tertib Empang
               </label>
               <div className="relative">
-                <Calendar
+                <AlignLeft
                   className="absolute left-4 top-4 text-slate-400"
                   size={20}
                 />
-                <input
-                  type="date"
-                  name="tanggal_lomba"
-                  value={formData.tanggal_lomba}
+                <textarea
+                  name="peraturan_empang"
+                  value={formData.peraturan_empang}
                   onChange={handleChange}
+                  rows={4}
                   className="w-full pl-12 pr-4 py-4 rounded-2xl border border-slate-200 focus:ring-4 focus:ring-red-100 focus:border-[#ff4d4d] outline-none transition-all font-bold text-slate-700 bg-slate-50"
-                  required
-                />
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* Input Harga Tiket */}
-              <div>
-                <label className="block text-xs font-black text-slate-400 mb-2 uppercase tracking-widest">
-                  Harga Tiket (Rp)
-                </label>
-                <div className="relative">
-                  <Ticket
-                    className="absolute left-4 top-4 text-slate-400"
-                    size={20}
-                  />
-                  <input
-                    type="number"
-                    name="harga_tiket"
-                    value={formData.harga_tiket}
-                    onChange={handleChange}
-                    className="w-full pl-12 pr-4 py-4 rounded-2xl border border-slate-200 focus:ring-4 focus:ring-red-100 focus:border-[#ff4d4d] outline-none transition-all font-bold text-slate-700 bg-slate-50"
-                    required
-                  />
-                </div>
-              </div>
-
-              {/* Input Kuota Peserta */}
-              <div>
-                <label className="block text-xs font-black text-slate-400 mb-2 uppercase tracking-widest">
-                  Kuota Lapak
-                </label>
-                <div className="relative">
-                  <Users
-                    className="absolute left-4 top-4 text-slate-400"
-                    size={20}
-                  />
-                  <input
-                    type="number"
-                    name="kuota_peserta"
-                    value={formData.kuota_peserta}
-                    onChange={handleChange}
-                    className="w-full pl-12 pr-4 py-4 rounded-2xl border border-slate-200 focus:ring-4 focus:ring-red-100 focus:border-[#ff4d4d] outline-none transition-all font-bold text-slate-700 bg-slate-50"
-                    required
-                  />
-                </div>
+                ></textarea>
               </div>
             </div>
 
             <hr className="border-slate-100" />
 
-            {/* Tombol Simpan */}
             <div className="flex justify-end">
               <button
                 type="submit"
                 disabled={isSaving}
-                className="bg-slate-900 hover:bg-slate-800 text-white px-8 py-4 rounded-2xl font-black flex items-center gap-2 transition-all shadow-xl hover:scale-[1.02] active:scale-95 disabled:bg-slate-400 disabled:cursor-not-allowed"
+                className="bg-slate-900 hover:bg-slate-800 text-white px-8 py-4 rounded-2xl font-black flex items-center gap-2 transition-all shadow-xl hover:scale-[1.02] active:scale-95 disabled:bg-slate-400"
               >
                 {isSaving ? (
                   <Loader2 className="animate-spin" size={20} />
                 ) : (
                   <Save size={20} />
                 )}
-                SIMPAN PENGATURAN
+                SIMPAN PENGATURAN WEB
               </button>
             </div>
           </form>

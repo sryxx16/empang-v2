@@ -116,4 +116,15 @@ public function index()
             'peserta' => $daftarLunas
         ]);
     }
+
+    public function destroy($id)
+{
+    $booking = Booking::findOrFail($id);
+    $booking->delete();
+
+    return response()->json([
+        'success' => true,
+        'message' => 'Peserta berhasil dihapus, slot kembali tersedia'
+    ]);
+}
 }

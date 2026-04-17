@@ -6,7 +6,9 @@ import {
   Settings,
   Camera,
   LogOut,
+  Calendar, // <-- Ini icon baru buat Jadwal Lomba
 } from "lucide-react";
+
 export default function AdminLayout({
   children,
 }: {
@@ -49,6 +51,29 @@ export default function AdminLayout({
             <LayoutDashboard size={20} /> Dashboard
           </Link>
 
+          {/* MENU BARU: JADWAL LOMBA */}
+          <Link
+            to="/admin/lomba"
+            className={`w-full flex items-center gap-3 p-3 rounded-xl font-bold transition-all ${
+              isActive("/admin/lomba")
+                ? "bg-[#ff4d4d] text-white shadow-lg shadow-red-500/20"
+                : "text-slate-400 hover:text-white hover:bg-slate-800"
+            }`}
+          >
+            <Calendar size={20} /> Jadwal Lomba
+          </Link>
+
+          <Link
+            to="/admin/kasir"
+            className={`w-full flex items-center gap-3 p-3 rounded-xl font-bold transition-all ${
+              isActive("/admin/kasir")
+                ? "bg-[#ff4d4d] text-white shadow-lg shadow-red-500/20"
+                : "text-slate-400 hover:text-white hover:bg-slate-800"
+            }`}
+          >
+            <Camera size={20} /> Hybrid Check-IN
+          </Link>
+
           <Link
             to="/admin/reports"
             className={`w-full flex items-center gap-3 p-3 rounded-xl font-bold transition-all ${
@@ -69,12 +94,6 @@ export default function AdminLayout({
             }`}
           >
             <Settings size={20} /> Pengaturan Web
-          </Link>
-          <Link
-            to="/admin/kasir"
-            className={`w-full flex items-center gap-3 p-3 rounded-xl font-bold transition-all ${isActive("/admin/kasir") ? "bg-[#ff4d4d] text-white shadow-lg" : "text-slate-400 hover:text-white hover:bg-slate-800"}`}
-          >
-            <Camera size={20} /> Hybrid Check-IN
           </Link>
         </nav>
 

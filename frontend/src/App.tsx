@@ -12,6 +12,7 @@ import AdminLoginPage from "./pages/admin/AdminLoginPage";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminReportPage from "./pages/admin/AdminReportPage";
 import AdminKasirPage from "./pages/admin/AdminKasirPage";
+import AdminLombaPage from "./pages/admin/AdminLombaPage";
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
         <Route path="/admin/reports" element={<AdminReportPage />} />
         <Route path="/admin/settings" element={<AdminSettingsPage />} />
         <Route path="/admin/kasir" element={<AdminKasirPage />} />
+        <Route path="/admin/lomba" element={<AdminLombaPage />} />
       </Routes>
     </BrowserRouter>
   );

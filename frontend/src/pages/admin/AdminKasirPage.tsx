@@ -1,18 +1,25 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
-import { Camera, Upload, CheckCircle, Loader2, Calendar } from "lucide-react";
-import Tesseract from "tesseract.js";
+import {
+  CheckCircle,
+  Zap,
+  Calendar,
+  UserPlus,
+  Banknote,
+  CreditCard,
+} from "lucide-react";
 import AdminLayout from "../../components/admin/AdminLayout";
 
 export default function AdminKasirPage() {
   const [lombas, setLombas] = useState<any[]>([]);
   const [selectedLombaId, setSelectedLombaId] = useState<string>("");
   const [rekaps, setRekaps] = useState<any[]>([]);
+  const [onlineBookings, setOnlineBookings] = useState<any[]>([]);
 
-  // State untuk OCR
-  const [image, setImage] = useState<File | null>(null);
-  const [isScanning, setIsScanning] = useState(false);
-  const [scannedNames, setScannedNames] = useState<string[]>([]);
+  // State untuk Kasir Kilat
+  const [quickName, setQuickName] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const token = localStorage.getItem("admin_token");
 
@@ -21,7 +28,10 @@ export default function AdminKasirPage() {
   }, []);
 
   useEffect(() => {
-    if (selectedLombaId) fetchRekaps();
+    if (selectedLombaId) {
+      fetchRekaps();
+      fetchOnlineBookings();
+    }
   }, [selectedLombaId]);
 
   const fetchLombas = async () => {
@@ -31,6 +41,23 @@ export default function AdminKasirPage() {
       });
       setLombas(res.data);
       if (res.data.length > 0) setSelectedLombaId(res.data[0].id);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const fetchOnlineBookings = async () => {
+    try {
+      const res = await axios.get(
+        `http://localhost/api/admin/lombas/${selectedLombaId}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        },
+      );
+      // Filter hanya yang statusnya verified (booking sah)
+      const validBookings =
+        res.data.bookings?.filter((b: any) => b.status === "verified") || [];
+      setOnlineBookings(validBookings);
     } catch (err) {
       console.error(err);
     }
@@ -50,76 +77,19 @@ export default function AdminKasirPage() {
     }
   };
 
-  // FUNGSI OCR CLOUD (Pakai OCR.space)
-  const handleScanImage = async () => {
-    if (!image) return alert("Pilih foto buku dulu, Bang!");
-
-    setIsScanning(true);
-
-    // Siapkan data gambar untuk dikirim ke API
-    const formData = new FormData();
-    formData.append("file", image);
-    formData.append("language", "eng"); // Pakai 'eng' biasanya lebih akurat buat baca huruf kapital
-    formData.append("isOverlayRequired", "false");
-    formData.append("OCREngine", "2"); // Engine 2 lebih bagus buat tulisan yang kurang jelas
-
-    try {
-      const response = await axios.post(
-        "https://api.ocr.space/parse/image",
-        formData,
-        {
-          headers: {
-            apikey: "K87463542988957", // <--- GANTI PAKAI API KEY DARI EMAIL!
-            "Content-Type": "multipart/form-data",
-          },
-        },
-      );
-
-      const result = response.data;
-
-      // Cek apakah API berhasil baca
-      if (result.IsErroredOnProcessing) {
-        alert("Waduh, server API-nya gagal proses foto lu Bang.");
-        return;
-      }
-
-      // Teks mentah dari Cloud
-      const rawText = result.ParsedResults[0].ParsedText;
-
-      // Logika "Pembersih Teks" yang sama kayak tadi
-      const namesArray = rawText
-        .split("\n")
-        .map((name: string) =>
-          name
-            .replace(/^[0-9\.\-\s]+/, "")
-            .replace(/[^a-zA-Z\s]/g, "")
-            .trim(),
-        )
-        .filter((name: string) => name.length > 2);
-
-      setScannedNames(namesArray);
-
-      if (namesArray.length === 0) {
-        alert(
-          "Gambarnya kurang terang atau tulisannya terlalu dokter nih Bang!",
-        );
-      }
-    } catch (error) {
-      console.error("Gagal nge-scan:", error);
-      alert("Terjadi kesalahan saat memanggil API OCR.");
-    } finally {
-      setIsScanning(false);
+  const handleQuickAdd = async (metode: string) => {
+    if (!quickName.trim()) {
+      inputRef.current?.focus();
+      return;
     }
-  };
 
-  // Fungsi saat tombol Kasir diklik
-  const handleBayar = async (nama: string, metode: string) => {
+    setIsSubmitting(true);
     try {
       await axios.post(
         "http://localhost/api/admin/rekaps",
         {
           lomba_id: selectedLombaId,
-          nama_peserta: nama,
+          nama_peserta: quickName,
           metode_bayar: metode,
         },
         {
@@ -127,43 +97,91 @@ export default function AdminKasirPage() {
         },
       );
 
-      // Hapus dari daftar scan, masukkan ke daftar lunas
-      setScannedNames(scannedNames.filter((n) => n !== nama));
+      setQuickName("");
       fetchRekaps();
+      inputRef.current?.focus();
     } catch (err) {
       console.error(err);
       alert("Gagal mencatat pembayaran");
+    } finally {
+      setIsSubmitting(false);
     }
   };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      handleQuickAdd("tunai");
+    }
+  };
+
+  const handleCheckInOnline = async (booking: any, metode: string) => {
+    try {
+      await axios.post(
+        "http://localhost/api/admin/rekaps",
+        {
+          lomba_id: selectedLombaId,
+          nama_peserta: booking.nama_peserta,
+          metode_bayar: metode,
+        },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        },
+      );
+
+      setOnlineBookings(onlineBookings.filter((b) => b.id !== booking.id));
+      fetchRekaps();
+    } catch (err) {
+      console.error(err);
+      alert("Gagal memproses check-in");
+    }
+  };
+
+  const activeLomba = lombas.find((l) => l.id.toString() === selectedLombaId);
+  const totalPendapatan = rekaps.length * (activeLomba?.harga_tiket || 0);
 
   return (
     <AdminLayout>
       <main className="flex-grow p-8">
-        <header className="mb-8">
-          <h1 className="text-3xl font-black text-slate-900 tracking-tight flex items-center gap-3 uppercase">
-            <Camera className="text-[#ff4d4d]" size={32} /> Kasir & Scan OCR
-          </h1>
-          <p className="text-slate-500 font-medium mt-2">
-            Upload foto buku catatan pendaftaran offline, sistem akan mendeteksi
-            nama secara otomatis.
-          </p>
+        {/* HEADER & PENDAPATAN */}
+        <header className="mb-8 flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
+          <div>
+            <h1 className="text-3xl font-black text-slate-900 tracking-tight flex items-center gap-3 uppercase">
+              <Zap className="text-[#ff4d4d]" size={32} /> Hybrid Check-in
+            </h1>
+            <p className="text-slate-500 font-medium mt-2">
+              Kelola antrean online dan pendaftar langsung dalam satu layar.
+            </p>
+          </div>
+
+          <div className="bg-green-50 border border-green-200 px-6 py-3 rounded-2xl text-right w-full md:w-auto">
+            <p className="text-xs font-bold text-green-600 uppercase tracking-widest mb-1">
+              Pendapatan Sesi Ini
+            </p>
+            <p className="text-2xl font-black text-green-700">
+              Rp {totalPendapatan.toLocaleString("id-ID")}
+            </p>
+          </div>
         </header>
 
-        {/* Pilih Sesi Lomba */}
+        {/* DROPDOWN PILIH SESI TANGGAL (Ini yang tadi hilang Bang!) */}
         <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm mb-8">
           <label className="block text-xs font-black text-slate-400 mb-2 uppercase tracking-widest">
-            Sesi Lomba Aktif
+            Pilih Sesi / Tanggal Lomba
           </label>
           <div className="relative w-full max-w-md">
             <Calendar
-              className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"
+              className="absolute left-4 top-1/2 -translate-y-1/2 text-[#ff4d4d]"
               size={20}
             />
             <select
               value={selectedLombaId}
               onChange={(e) => setSelectedLombaId(e.target.value)}
-              className="w-full pl-12 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl font-bold text-slate-700 outline-none"
+              className="w-full pl-12 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl font-bold text-slate-700 outline-none cursor-pointer focus:ring-2 focus:ring-red-100"
             >
+              {lombas.length === 0 && (
+                <option value="">Belum ada jadwal lomba</option>
+              )}
               {lombas.map((l) => (
                 <option key={l.id} value={l.id}>
                   {l.tanggal_lomba} — {l.nama_lomba}
@@ -173,100 +191,121 @@ export default function AdminKasirPage() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* BAGIAN KIRI: UPLOAD OCR */}
-          <div className="bg-white rounded-3xl shadow-sm border border-slate-200 p-6">
-            <h2 className="text-xl font-black mb-4 uppercase text-slate-800 border-b pb-2">
-              1. Upload Buku
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* KOLOM 1: ANTREAN ONLINE (DARI WEB) */}
+          <div className="bg-white rounded-3xl shadow-sm border border-slate-200 p-6 h-fit max-h-[600px] overflow-y-auto">
+            <h2 className="text-lg font-black mb-4 uppercase text-blue-700 flex items-center gap-2 sticky top-0 bg-white pb-2 border-b">
+              <UserPlus size={20} /> Antrean Web Sesi Ini
             </h2>
-
-            <div className="border-2 border-dashed border-slate-300 rounded-2xl p-8 text-center mb-4 bg-slate-50">
-              <input
-                type="file"
-                accept="image/*"
-                onChange={(e) =>
-                  setImage(e.target.files ? e.target.files[0] : null)
-                }
-                className="w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-bold file:bg-red-50 file:text-red-700 hover:file:bg-red-100"
-              />
-            </div>
-
-            <button
-              onClick={handleScanImage}
-              disabled={isScanning || !image}
-              className="w-full bg-slate-900 hover:bg-slate-800 text-white p-4 rounded-xl font-black flex justify-center items-center gap-2 shadow-lg disabled:bg-slate-400"
-            >
-              {isScanning ? <Loader2 className="animate-spin" /> : <Upload />}
-              {isScanning ? "MEMBACA GAMBAR..." : "SCAN SEKARANG"}
-            </button>
-
-            {/* Hasil Scan Draft */}
-            {scannedNames.length > 0 && (
-              <div className="mt-8">
-                <h3 className="font-black text-sm text-slate-400 uppercase tracking-widest mb-3">
-                  Hasil Baca Sistem:
-                </h3>
-                <ul className="space-y-3">
-                  {scannedNames.map((nama, idx) => (
-                    <li
-                      key={idx}
-                      className="flex justify-between items-center bg-yellow-50 border border-yellow-200 p-3 rounded-xl"
+            <div className="space-y-3">
+              {onlineBookings.filter(
+                (b) => !rekaps.some((r) => r.nama_peserta === b.nama_peserta),
+              ).length === 0 ? (
+                <p className="text-xs font-bold text-slate-400 text-center py-10 italic">
+                  Antrean online kosong.
+                </p>
+              ) : (
+                onlineBookings
+                  .filter(
+                    (b) =>
+                      !rekaps.some((r) => r.nama_peserta === b.nama_peserta),
+                  )
+                  .map((b) => (
+                    <div
+                      key={b.id}
+                      className="bg-blue-50 border border-blue-100 p-4 rounded-2xl flex flex-col xl:flex-row justify-between xl:items-center gap-3"
                     >
-                      <span className="font-bold text-slate-800">{nama}</span>
+                      <span className="font-bold text-slate-800">
+                        {b.nama_peserta}
+                      </span>
                       <div className="flex gap-2">
                         <button
-                          onClick={() => handleBayar(nama, "tunai")}
-                          className="bg-green-500 text-white text-xs font-bold px-3 py-2 rounded-lg hover:bg-green-600"
+                          onClick={() => handleCheckInOnline(b, "tunai")}
+                          className="bg-green-500 hover:bg-green-600 text-white text-[11px] font-black px-3 py-2 rounded-lg transition-colors"
                         >
-                          TUNAI
+                          CASH
                         </button>
                         <button
-                          onClick={() => handleBayar(nama, "transfer")}
-                          className="bg-blue-500 text-white text-xs font-bold px-3 py-2 rounded-lg hover:bg-blue-600"
+                          onClick={() => handleCheckInOnline(b, "transfer")}
+                          className="bg-blue-500 hover:bg-blue-600 text-white text-[11px] font-black px-3 py-2 rounded-lg transition-colors"
                         >
                           TF
                         </button>
                       </div>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
+                    </div>
+                  ))
+              )}
+            </div>
           </div>
 
-          {/* BAGIAN KANAN: REKAP LUNAS */}
-          <div className="bg-white rounded-3xl shadow-sm border border-slate-200 p-6">
-            <h2 className="text-xl font-black mb-4 uppercase text-green-700 border-b pb-2 flex items-center gap-2">
-              <CheckCircle size={24} /> Data Lunas (Final)
+          {/* KOLOM 2: INPUT WALK-IN (KASIR KILAT) */}
+          <div className="bg-white rounded-3xl shadow-sm border border-slate-200 p-6 h-fit sticky top-8">
+            <h2 className="text-lg font-black mb-4 uppercase text-slate-800 flex items-center gap-2 border-b pb-2">
+              <Zap size={20} className="text-[#ff4d4d]" /> Pendaftar Langsung
             </h2>
+            <input
+              ref={inputRef}
+              type="text"
+              value={quickName}
+              onChange={(e) => setQuickName(e.target.value)}
+              onKeyDown={handleKeyDown}
+              placeholder="Ketik nama di sini..."
+              className="w-full p-4 border-2 border-slate-200 rounded-2xl font-bold focus:border-[#ff4d4d] outline-none mb-4 bg-slate-50 text-lg text-center"
+            />
+            <div className="grid grid-cols-2 gap-3">
+              <button
+                disabled={isSubmitting || !quickName}
+                onClick={() => handleQuickAdd("tunai")}
+                className="bg-green-500 hover:bg-green-600 disabled:opacity-50 text-white p-4 rounded-xl font-black text-sm flex justify-center items-center gap-2 shadow-md"
+              >
+                <Banknote size={18} /> CASH
+              </button>
+              <button
+                disabled={isSubmitting || !quickName}
+                onClick={() => handleQuickAdd("transfer")}
+                className="bg-blue-500 hover:bg-blue-600 disabled:opacity-50 text-white p-4 rounded-xl font-black text-sm flex justify-center items-center gap-2 shadow-md"
+              >
+                <CreditCard size={18} /> TF
+              </button>
+            </div>
+            <p className="text-[10px] text-center font-bold text-slate-400 mt-4 uppercase tracking-widest">
+              Tekan Enter untuk Lunas Cash
+            </p>
+          </div>
 
-            {rekaps.length === 0 ? (
-              <p className="text-center font-bold text-slate-400 py-10">
-                Belum ada data kasir.
-              </p>
-            ) : (
-              <ul className="space-y-3">
-                {rekaps.map((r: any) => (
+          {/* KOLOM 3: REKAP FINAL (LUNAS) */}
+          <div className="bg-white rounded-3xl shadow-sm border border-slate-200 p-6 h-fit max-h-[600px] overflow-y-auto">
+            <h2 className="text-lg font-black mb-4 uppercase text-green-700 border-b pb-4 flex items-center justify-between sticky top-0 bg-white">
+              <span className="flex items-center gap-2">
+                <CheckCircle size={20} /> Lunas Sesi Ini
+              </span>
+              <span className="bg-green-100 text-green-700 text-sm font-black px-3 py-1 rounded-full">
+                {rekaps.length}
+              </span>
+            </h2>
+            <ul className="space-y-2 mt-2">
+              {rekaps.length === 0 ? (
+                <p className="text-xs font-bold text-slate-400 text-center py-10 italic">
+                  Belum ada peserta lunas.
+                </p>
+              ) : (
+                rekaps.map((r: any) => (
                   <li
                     key={r.id}
-                    className="flex justify-between items-center bg-slate-50 border border-slate-100 p-4 rounded-xl"
+                    className="flex justify-between items-center bg-slate-50 p-3 rounded-xl border border-slate-100 hover:bg-slate-100 transition-colors"
                   >
-                    <span className="font-black text-slate-800">
+                    <span className="font-bold text-slate-800">
                       {r.nama_peserta}
                     </span>
                     <span
-                      className={`px-3 py-1 rounded-full text-xs font-black uppercase ${
-                        r.metode_bayar === "tunai"
-                          ? "bg-green-100 text-green-700"
-                          : "bg-blue-100 text-blue-700"
-                      }`}
+                      className={`text-[10px] font-black uppercase px-2 py-1 rounded-md ${r.metode_bayar === "tunai" ? "bg-green-100 text-green-700" : "bg-blue-100 text-blue-700"}`}
                     >
                       {r.metode_bayar}
                     </span>
                   </li>
-                ))}
-              </ul>
-            )}
+                ))
+              )}
+            </ul>
           </div>
         </div>
       </main>

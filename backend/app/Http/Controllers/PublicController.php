@@ -11,38 +11,24 @@ class PublicController extends Controller
 {
     // 1. Mengambil Jadwal Lomba Aktif + Live Slot + Info Empang
     public function getHomeData()
-    {
-        $settings = Setting::first();
-
-        $lombas = Lomba::where('is_active', true)
+{
+    return response()->json([
+        'settings' => \App\Models\Setting::first(),
+        'lombas' => \App\Models\Lomba::where('is_active', true)
             ->whereDate('tanggal_lomba', '>=', now())
-            ->orderBy('tanggal_lomba', 'asc')
             ->get()
-            ->map(function ($lomba) {
-
-                // REVISI: Cuma ngitung dari pendaftar Web aja (yang belum dibatalkan/ditolak)
-                // Jadi laporan Kasir (Rekap) gak bakal ganggu sisa slot di depan!
-                $terisi = $lomba->bookings()->whereIn('status', ['pending', 'verified'])->count();
-
-                // Pastikan sisa slot gak minus
-                $sisa = max(0, $lomba->kuota - $terisi);
-
+            ->map(function ($l) {
+                $terisi = $l->bookings()->whereIn('status', ['pending', 'verified'])->count();
                 return [
-                    'id' => $lomba->id,
-                    'nama_lomba' => $lomba->nama_lomba,
-                    'tanggal_lomba' => $lomba->tanggal_lomba,
-                    'harga_tiket' => $lomba->harga_tiket,
-                    'kuota' => $lomba->kuota,
-                    'terisi' => $terisi,
-                    'sisa' => $sisa,
+                    'id' => $l->id,
+                    'nama_lomba' => $l->nama_lomba,
+                    'tanggal_lomba' => $l->tanggal_lomba,
+                    'sisa' => max(0, $l->kuota - $terisi),
+                    'total' => $l->kuota
                 ];
-            });
-
-        return response()->json([
-            'settings' => $settings,
-            'lombas' => $lombas
-        ]);
-    }
+            })
+    ]);
+}
     // 2. Menerima Pendaftaran dari Web (Masuk sebagai Pending)
     public function storeBooking(Request $request)
     {

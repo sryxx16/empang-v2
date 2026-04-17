@@ -2,40 +2,34 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Setting;
+use Illuminate\Http\Request;
 
 class SettingController extends Controller
 {
     public function index()
     {
-        $setting = Setting::firstOrCreate(
-            ['id' => 1],
-            [
-                'nama_pemancingan' => 'Pemancingan Combro',
-                'nomor_wa' => '6281234567890',
-                'info_rekening' => 'BCA 123456789 a.n Udin',
-                'peraturan_empang' => "1. Dilarang pakai umpan hidup\n2. Dilarang mabuk\n3. Keputusan panitia mutlak"
-            ]
-        );
-
-        return response()->json($setting);
+        // Ambil data pertama, kalau nggak ada buat baru yang kosong
+        return response()->json(Setting::firstOrCreate([], [
+            'nama_pemancingan' => 'Nama Empang Lu',
+            'nomor_wa' => '08123456789',
+            'lokasi' => 'Alamat Empang',
+            'info_rekening' => 'Bank Mandiri 123456789 a/n Nama Lu'
+        ]));
     }
 
     public function update(Request $request)
     {
-        $setting = Setting::find(1);
-
-        $setting->update([
-            'nama_pemancingan' => $request->nama_pemancingan,
-            'nomor_wa' => $request->nomor_wa,
-            'info_rekening' => $request->info_rekening,
-            'peraturan_empang' => $request->peraturan_empang,
+        $request->validate([
+            'nama_pemancingan' => 'required|string',
+            'nomor_wa' => 'required|string',
+            'lokasi' => 'required|string',
+            'info_rekening' => 'required|string',
         ]);
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Pengaturan Web berhasil diperbarui!'
-        ]);
+        $setting = Setting::first();
+        $setting->update($request->all());
+
+        return response()->json(['message' => 'Pengaturan berhasil disimpan!', 'data' => $setting]);
     }
 }

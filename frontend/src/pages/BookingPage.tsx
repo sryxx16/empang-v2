@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { Link } from "react-router-dom"; // <--- TAMBAHIN INI
 import {
   Ticket,
   User,
@@ -8,6 +9,7 @@ import {
   Send,
   AlertCircle,
   Clock,
+  ArrowLeft,
 } from "lucide-react";
 
 export default function BookingPage() {
@@ -105,8 +107,19 @@ export default function BookingPage() {
   return (
     <div className="min-h-screen bg-slate-50 pb-20">
       {/* HEADER PUBLIC */}
-      <div className="bg-slate-900 text-white pt-16 pb-24 px-6 text-center">
-        <h1 className="text-4xl md:text-5xl font-black tracking-tight mb-4 uppercase text-[#ff4d4d]">
+
+      <div className="bg-slate-900 text-white pt-8 pb-24 px-6 text-center relative">
+        {/* TOMBOL BACK KE HOME */}
+        <Link
+          to="/"
+          className="absolute top-6 left-4 md:left-10 flex items-center gap-2 text-slate-400 hover:text-[#ff4d4d] font-bold transition-colors bg-slate-800/50 hover:bg-slate-800 px-4 py-2 rounded-full"
+        >
+          <ArrowLeft size={20} />{" "}
+          <span className="hidden md:inline">Kembali</span>
+        </Link>
+
+        {/* Tambahin margin-top (mt-8) biar judulnya gak nabrak tombol */}
+        <h1 className="text-4xl md:text-5xl font-black tracking-tight mb-4 uppercase text-[#ff4d4d] mt-8 md:mt-4">
           {data.settings?.nama_pemancingan || "Pemancingan"}
         </h1>
         <p className="text-slate-400 font-medium max-w-xl mx-auto">
@@ -201,7 +214,7 @@ export default function BookingPage() {
                           </h3>
                           <p className="text-xs font-bold text-slate-500 flex items-center gap-1 mt-1">
                             <Clock size={12} /> {l.tanggal_lomba} • Rp{" "}
-                            {l.harga_tiket.toLocaleString("id-ID")}
+                            {(l.harga_tiket || 0).toLocaleString("id-ID")}
                           </p>
                         </div>
                         <div className="text-right">

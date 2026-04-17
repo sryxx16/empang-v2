@@ -6,6 +6,7 @@ use App\Http\Controllers\BookingController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\LombaController;
 use App\Http\Controllers\RekapController;
+use App\Http\Controllers\PublicController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -16,6 +17,10 @@ Route::get('/user', function (Request $request) {
 Route::post('/bookings', [BookingController::class, 'store']);
 Route::get('/bookings/check/{nama}', [BookingController::class, 'checkStatus']);
 Route::post('/login', [AuthController::class, 'login']);
+
+// --- AREA PUBLIK (Bebas Akses Tanpa Login) ---
+Route::get('/public/home', [PublicController::class, 'getHomeData']);
+Route::post('/public/booking', [PublicController::class, 'storeBooking']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);

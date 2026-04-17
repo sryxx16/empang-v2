@@ -7,6 +7,7 @@ import {
   UserPlus,
   Banknote,
   CreditCard,
+  Trash2, // <-- Icon hapus ditambahkan
 } from "lucide-react";
 import AdminLayout from "../../components/admin/AdminLayout";
 
@@ -54,10 +55,12 @@ export default function AdminKasirPage() {
           headers: { Authorization: `Bearer ${token}` },
         },
       );
-      // Filter hanya yang statusnya verified (booking sah)
-      const validBookings =
-        res.data.bookings?.filter((b: any) => b.status === "verified") || [];
-      setOnlineBookings(validBookings);
+
+      // REVISI: Tarik SEMUA data booking web (termasuk yang 'pending') biar siap lu eksekusi di rekap akhir!
+      const allBookings =
+        res.data.bookings?.filter((b: any) => b.status !== "cancelled") || [];
+
+      setOnlineBookings(allBookings);
     } catch (err) {
       console.error(err);
     }
@@ -116,6 +119,7 @@ export default function AdminKasirPage() {
   };
 
   const handleCheckInOnline = async (booking: any, metode: string) => {
+    setIsSubmitting(true);
     try {
       await axios.post(
         "http://localhost/api/admin/rekaps",
@@ -134,6 +138,23 @@ export default function AdminKasirPage() {
     } catch (err) {
       console.error(err);
       alert("Gagal memproses check-in");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  // Fungsi baru untuk Hapus Data Lunas (Mencegah double entry)
+  const handleDeleteRekap = async (id: number) => {
+    if (!window.confirm("Hapus data lunas ini?")) return;
+
+    try {
+      await axios.delete(`http://localhost/api/admin/rekaps/${id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      fetchRekaps(); // Segarkan daftar setelah dihapus
+    } catch (err) {
+      console.error(err);
+      alert("Gagal menghapus data");
     }
   };
 
@@ -164,7 +185,7 @@ export default function AdminKasirPage() {
           </div>
         </header>
 
-        {/* DROPDOWN PILIH SESI TANGGAL (Ini yang tadi hilang Bang!) */}
+        {/* DROPDOWN PILIH SESI TANGGAL */}
         <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm mb-8">
           <label className="block text-xs font-black text-slate-400 mb-2 uppercase tracking-widest">
             Pilih Sesi / Tanggal Lomba
@@ -220,14 +241,16 @@ export default function AdminKasirPage() {
                       </span>
                       <div className="flex gap-2">
                         <button
+                          disabled={isSubmitting}
                           onClick={() => handleCheckInOnline(b, "tunai")}
-                          className="bg-green-500 hover:bg-green-600 text-white text-[11px] font-black px-3 py-2 rounded-lg transition-colors"
+                          className="bg-green-500 hover:bg-green-600 disabled:opacity-50 text-white text-[11px] font-black px-3 py-2 rounded-lg transition-colors"
                         >
                           CASH
                         </button>
                         <button
+                          disabled={isSubmitting}
                           onClick={() => handleCheckInOnline(b, "transfer")}
-                          className="bg-blue-500 hover:bg-blue-600 text-white text-[11px] font-black px-3 py-2 rounded-lg transition-colors"
+                          className="bg-blue-500 hover:bg-blue-600 disabled:opacity-50 text-white text-[11px] font-black px-3 py-2 rounded-lg transition-colors"
                         >
                           TF
                         </button>
@@ -292,16 +315,26 @@ export default function AdminKasirPage() {
                 rekaps.map((r: any) => (
                   <li
                     key={r.id}
-                    className="flex justify-between items-center bg-slate-50 p-3 rounded-xl border border-slate-100 hover:bg-slate-100 transition-colors"
+                    className="flex justify-between items-center bg-slate-50 p-3 rounded-xl border border-slate-100 hover:bg-slate-100 transition-colors group"
                   >
-                    <span className="font-bold text-slate-800">
-                      {r.nama_peserta}
-                    </span>
-                    <span
-                      className={`text-[10px] font-black uppercase px-2 py-1 rounded-md ${r.metode_bayar === "tunai" ? "bg-green-100 text-green-700" : "bg-blue-100 text-blue-700"}`}
+                    <div className="flex flex-col">
+                      <span className="font-bold text-slate-800">
+                        {r.nama_peserta}
+                      </span>
+                      <span
+                        className={`text-[9px] font-black uppercase px-2 py-0.5 rounded w-fit mt-1 ${r.metode_bayar === "tunai" ? "bg-green-100 text-green-700" : "bg-blue-100 text-blue-700"}`}
+                      >
+                        {r.metode_bayar}
+                      </span>
+                    </div>
+                    {/* Tombol Hapus */}
+                    <button
+                      onClick={() => handleDeleteRekap(r.id)}
+                      className="text-slate-300 hover:text-red-500 transition-colors p-2 rounded-lg hover:bg-red-50"
+                      title="Hapus jika salah ketik/ganda"
                     >
-                      {r.metode_bayar}
-                    </span>
+                      <Trash2 size={16} />
+                    </button>
                   </li>
                 ))
               )}

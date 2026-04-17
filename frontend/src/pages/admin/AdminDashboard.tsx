@@ -261,11 +261,9 @@ export default function AdminDashboard() {
                           </span>
                         </td>
                         <td className="p-4 text-right">
-                          {b.status === "pending" && (
-                            <button className="bg-[#ff4d4d] text-white px-4 py-2 rounded-lg font-bold text-sm hover:bg-red-600 transition-colors shadow-md shadow-red-500/20">
-                              VERIFIKASI
-                            </button>
-                          )}
+                          <span className="text-xs font-bold text-slate-400">
+                            Menunggu Hari H
+                          </span>
                         </td>
                       </tr>
                     ))

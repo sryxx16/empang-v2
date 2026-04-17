@@ -40,4 +40,5 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/admin/rekaps/{lomba_id}', [RekapController::class, 'getByLomba']);
     Route::post('/admin/rekaps', [RekapController::class, 'store']);
+    Route::delete('/admin/rekaps/{id}', [RekapController::class, 'destroy']);
 });

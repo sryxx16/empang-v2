@@ -35,4 +35,15 @@ class RekapController extends Controller
             'data' => $rekap
         ]);
     }
+
+    public function destroy($id)
+{
+    $rekap = Rekap::find($id);
+    if (!$rekap) {
+        return response()->json(['message' => 'Data tidak ditemukan'], 404);
+    }
+
+    $rekap->delete();
+    return response()->json(['success' => true, 'message' => 'Data berhasil dihapus']);
+}
 }

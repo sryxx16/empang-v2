@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Rekap;
+use App\Models\Lomba;
 
 class RekapController extends Controller
 {
@@ -23,10 +24,14 @@ class RekapController extends Controller
             'metode_bayar' => 'required|in:tunai,transfer',
         ]);
 
+        // Ambil harga tiket dari tabel lombas
+        $lomba = Lomba::findOrFail($request->lomba_id);
+
         $rekap = Rekap::create([
             'lomba_id' => $request->lomba_id,
             'nama_peserta' => $request->nama_peserta,
             'metode_bayar' => $request->metode_bayar,
+            'harga_tiket' => $lomba->harga_tiket,
         ]);
 
         return response()->json([

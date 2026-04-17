@@ -13,7 +13,8 @@ class Rekap extends Model
         'lomba_id',
         'nama_peserta',
         'nomor_lapak',
-        'metode_bayar'
+        'metode_bayar',
+        'harga_tiket'
     ];
 
     // Kabel balik ke tabel Lomba

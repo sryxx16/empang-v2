@@ -29,7 +29,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/admin/bookings', [BookingController::class, 'index']);
     Route::put('/admin/bookings/{id}/verify', [BookingController::class, 'verifyBooking']);
     Route::delete('/admin/bookings/{id}', [\App\Http\Controllers\BookingController::class, 'destroy']);
-    Route::get('/admin/reports', [BookingController::class, 'report']);
+    Route::get('/admin/reports', [\App\Http\Controllers\ReportController::class, 'index']);
 
     Route::get('/admin/settings', [SettingController::class, 'index']);
     Route::put('/admin/settings', [SettingController::class, 'update']);

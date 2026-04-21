@@ -85,7 +85,13 @@ export default function BookingPage() {
   // Fungsi buat Generate Link WhatsApp
   const handleWhatsApp = () => {
     if (!data.settings || !bookingResult) return;
-    const adminWA = data.settings.nomor_wa;
+    
+    // Format nomor WA agar valid untuk API wa.me (ubah 0 jadi 62 dan hapus karakter non-angka)
+    let adminWA = data.settings.nomor_wa.replace(/\D/g, "");
+    if (adminWA.startsWith("0")) {
+      adminWA = "62" + adminWA.substring(1);
+    }
+    
     const text = `Halo Admin ${data.settings.nama_pemancingan}, saya mau konfirmasi pendaftaran lomba.\n\nNama: *${formData.nama_peserta}*\nJadwal: *${bookingResult.lomba.nama_lomba} (${bookingResult.lomba.tanggal_lomba})*\nKode Booking: *${bookingResult.kode}*\n\nMohon diverifikasi ya Bang.`;
 
     window.open(

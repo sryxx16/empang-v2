@@ -47,4 +47,17 @@ class LombaController extends Controller
 
         return response()->json($lomba);
     }
+
+public function destroy($id)
+    {
+        $lomba = Lomba::findOrFail($id);
+
+        // Hapus data lomba
+        $lomba->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Jadwal Lomba berhasil dihapus!'
+        ]);
+    }
 }

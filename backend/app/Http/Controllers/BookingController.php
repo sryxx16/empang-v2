@@ -12,13 +12,11 @@ class BookingController extends Controller
         $request->validate([
             'nama_peserta' => 'required',
             'tanggal_lomba' => 'required',
-            'nomor_lapak' => 'required',
         ]);
 
         $booking = new \App\Models\Booking();
         $booking->nama_peserta = $request->nama_peserta;
         $booking->tanggal_lomba = $request->tanggal_lomba;
-        $booking->nomor_lapak = $request->nomor_lapak;
 
         // ----------------------------------------------------
         // TAMBAHKAN BARIS INI AGAR STATUSNYA TIDAK KOSONG

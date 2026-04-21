@@ -38,6 +38,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/admin/lombas', [LombaController::class, 'index']);
     Route::post('/admin/lombas', [LombaController::class, 'store']);
     Route::get('/admin/lombas/{id}', [LombaController::class, 'show']);
+    Route::delete('/admin/lombas/{id}', [LombaController::class, 'destroy']);
 
     Route::get('/admin/rekaps/{lomba_id}', [RekapController::class, 'getByLomba']);
     Route::post('/admin/rekaps', [RekapController::class, 'store']);

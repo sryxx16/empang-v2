@@ -4,12 +4,11 @@ import { useNavigate } from "react-router-dom";
 import {
   Users,
   Calendar,
-  Banknote,
   Search,
   Clock,
   CheckCircle,
   Trash2,
-} from "lucide-react"; // <-- Tambah Trash2
+} from "lucide-react";
 import AdminLayout from "../../components/admin/AdminLayout";
 
 export default function AdminDashboard() {
@@ -74,14 +73,14 @@ export default function AdminDashboard() {
     ) || [];
 
   const stats = {
-    pending:
-      activeData?.bookings?.filter((b: any) => b.status === "pending").length ||
-      0,
-    verified:
-      activeData?.bookings?.filter((b: any) => b.status === "verified")
-        .length || 0,
-    total: activeData?.bookings?.length || 0,
+    // Total kuota lapak untuk sesi lomba yang sedang dipilih
+    kuota_total: activeData?.kuota || 0,
+    // Total orang yang sudah booking web (yang tidak dibatalkan)
+    total_booking: activeData?.bookings?.length || 0,
   };
+
+  // Kalkulasi Sisa Lapak
+  const sisaLapak = stats.kuota_total - stats.total_booking;
 
   const handleDeleteBooking = async (bookingId: number, nama: string) => {
     const isConfirm = window.confirm(
@@ -106,7 +105,7 @@ export default function AdminDashboard() {
 
   return (
     <AdminLayout>
-      <main className="flex-grow p-8 bg-slate-50">
+      <main className="flex-grow p-8 bg-slate-50 min-h-screen">
         <header className="mb-10">
           <h1 className="text-3xl font-black text-slate-900 uppercase tracking-tight">
             Dashboard Monitor
@@ -144,42 +143,53 @@ export default function AdminDashboard() {
           <>
             {/* 2. KARTU STATISTIK SESI INI */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+              {/* KARTU 1: TOTAL BOOKING */}
               <div className="bg-white p-8 rounded-[32px] shadow-sm border border-slate-200 flex items-center gap-6">
                 <div className="w-14 h-14 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center">
                   <Users size={28} />
                 </div>
                 <div>
                   <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
-                    Total Pendaftar
+                    Total Antrean / Booking
                   </p>
                   <h3 className="text-2xl font-black text-slate-900">
-                    {stats.total} Orang
+                    {stats.total_booking} Orang
                   </h3>
                 </div>
               </div>
+
+              {/* KARTU 2: TOTAL KUOTA */}
               <div className="bg-white p-8 rounded-[32px] shadow-sm border border-slate-200 flex items-center gap-6">
-                <div className="w-14 h-14 bg-yellow-50 text-yellow-600 rounded-2xl flex items-center justify-center">
-                  <Clock size={28} />
-                </div>
-                <div>
-                  <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
-                    Menunggu (Pending)
-                  </p>
-                  <h3 className="text-2xl font-black text-slate-900">
-                    {stats.pending}
-                  </h3>
-                </div>
-              </div>
-              <div className="bg-white p-8 rounded-[32px] shadow-sm border border-slate-200 flex items-center gap-6">
-                <div className="w-14 h-14 bg-green-50 text-green-600 rounded-2xl flex items-center justify-center">
+                <div className="w-14 h-14 bg-slate-50 text-slate-600 rounded-2xl flex items-center justify-center">
                   <CheckCircle size={28} />
                 </div>
                 <div>
                   <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
-                    Lunas/Verified
+                    Kapasitas slot pendaftaran
                   </p>
                   <h3 className="text-2xl font-black text-slate-900">
-                    {stats.verified}
+                    {stats.kuota_total} pendaftaran
+                  </h3>
+                </div>
+              </div>
+
+              {/* KARTU 3: SISA LAPAK (WARNA MENYESUAIKAN) */}
+              <div
+                className={`p-8 rounded-[32px] shadow-sm border flex items-center gap-6 ${
+                  sisaLapak <= 5
+                    ? "bg-red-500 text-white border-red-600"
+                    : "bg-green-500 text-white border-green-600"
+                }`}
+              >
+                <div className="w-14 h-14 bg-white/20 rounded-2xl flex items-center justify-center">
+                  <Clock size={28} />
+                </div>
+                <div>
+                  <p className="text-[10px] font-black text-white/80 uppercase tracking-widest">
+                    Sisa pendaftaran Tersedia
+                  </p>
+                  <h3 className="text-3xl font-black">
+                    {sisaLapak > 0 ? sisaLapak : 0} pendaftar
                   </h3>
                 </div>
               </div>
@@ -213,13 +223,9 @@ export default function AdminDashboard() {
                       <th className="p-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">
                         Nama Peserta
                       </th>
-                      <th className="p-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">
-                        Status
-                      </th>
                       <th className="p-4 text-[10px] font-black text-slate-400 uppercase tracking-widest text-center">
                         Aksi
                       </th>
-                      {/* <-- Header Baru */}
                       <th className="p-4 text-[10px] font-black text-slate-400 uppercase tracking-widest text-right">
                         Waktu Daftar
                       </th>
@@ -229,10 +235,10 @@ export default function AdminDashboard() {
                     {filteredBookings.length === 0 ? (
                       <tr>
                         <td
-                          colSpan={4}
+                          colSpan={3}
                           className="p-10 text-center font-bold text-slate-400"
                         >
-                          Belum ada data.
+                          Belum ada data antrean.
                         </td>
                       </tr>
                     ) : (
@@ -244,18 +250,6 @@ export default function AdminDashboard() {
                           <td className="p-4 font-bold text-slate-800">
                             {b.nama_peserta}
                           </td>
-                          <td className="p-4">
-                            <span
-                              className={`px-3 py-1 rounded-full text-[10px] font-black uppercase ${
-                                b.status === "verified"
-                                  ? "bg-green-100 text-green-600"
-                                  : "bg-yellow-100 text-yellow-600"
-                              }`}
-                            >
-                              {b.status}
-                            </span>
-                          </td>
-                          {/* TOMBOL HAPUS BARU */}
                           <td className="p-4 text-center">
                             <button
                               onClick={() =>

@@ -15,23 +15,22 @@ class RekapController extends Controller
         return response()->json($rekaps);
     }
 
-    // Menyimpan peserta yang baru lunas (dari hasil scan OCR)
+    // Menyimpan data rekap baru (Lunas & Hutang)
     public function store(Request $request)
     {
-        $request->validate([
-            'lomba_id' => 'required|exists:lombas,id',
-            'nama_peserta' => 'required|string',
-            'metode_bayar' => 'required|in:tunai,transfer',
-        ]);
-
-        // Ambil harga tiket dari tabel lombas
+        // 1. Ambil harga tiket asli dari database lomba
         $lomba = Lomba::findOrFail($request->lomba_id);
+        $harga_tiket = $lomba->harga_tiket;
 
+        // 2. Simpan data (Otomatis ngatur hutang atau lunas)
         $rekap = Rekap::create([
             'lomba_id' => $request->lomba_id,
             'nama_peserta' => $request->nama_peserta,
+            'no_wa' => $request->no_wa ?? '-',
+            'harga_tiket' => $harga_tiket,
+            'nominal_bayar' => $request->nominal_bayar ?? $harga_tiket,
             'metode_bayar' => $request->metode_bayar,
-            'harga_tiket' => $lomba->harga_tiket,
+            'status_bayar' => $request->status_bayar ?? 'lunas',
         ]);
 
         return response()->json([
@@ -41,14 +40,15 @@ class RekapController extends Controller
         ]);
     }
 
+    // Menghapus data
     public function destroy($id)
-{
-    $rekap = Rekap::find($id);
-    if (!$rekap) {
-        return response()->json(['message' => 'Data tidak ditemukan'], 404);
-    }
+    {
+        $rekap = Rekap::find($id);
+        if (!$rekap) {
+            return response()->json(['message' => 'Data tidak ditemukan'], 404);
+        }
 
-    $rekap->delete();
-    return response()->json(['success' => true, 'message' => 'Data berhasil dihapus']);
-}
+        $rekap->delete();
+        return response()->json(['success' => true, 'message' => 'Data berhasil dihapus']);
+    }
 }

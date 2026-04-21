@@ -14,7 +14,6 @@ class Booking extends Model
         'lomba_id',
         'nama_peserta',
         'no_wa', // Pastikan nama kolom ini sama persis sama yang di database lu
-        'nomor_lapak',
         'status'
     ];
 

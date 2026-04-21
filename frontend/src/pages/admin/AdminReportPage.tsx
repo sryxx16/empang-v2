@@ -38,7 +38,7 @@ export default function AdminReportPage() {
       if (metode && metode !== "semua") params.append("metode_bayar", metode);
 
       const res = await axios.get(
-        `http://localhost/api/admin/reports?${params}`,
+        `/api/admin/reports?${params}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         },

@@ -76,7 +76,7 @@ export default function BookingForm() {
     try {
       // Mengirim data ke API Laravel (Pastikan port Laravel kamu benar, biasanya 8000 atau lewat Sail)
       const response = await axios.post(
-        "http://localhost/api/bookings",
+        "/api/bookings",
         payload,
       );
 

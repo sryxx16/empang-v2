@@ -19,7 +19,7 @@ export default function HomePage() {
   useEffect(() => {
     // Narik data dari backend buat Live Slot & Info
     axios
-      .get("http://localhost/api/public/home")
+      .get("/api/public/home")
       .then((res) => setData(res.data));
   }, []);
 
@@ -141,7 +141,7 @@ export default function HomePage() {
       <FeaturesSection />
       <AboutSection />
       <ProcessSection />
-      <GallerySection />
+      <GallerySection images={data?.settings?.potret_kami} />
       <TestimonialsFAQ />
 
       <Footer />

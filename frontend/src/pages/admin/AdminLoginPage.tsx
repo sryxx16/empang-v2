@@ -16,7 +16,7 @@ export default function AdminLoginPage() {
     setError("");
 
     try {
-      const response = await axios.post("http://localhost/api/login", {
+      const response = await axios.post("/api/login", {
         email,
         password,
       });

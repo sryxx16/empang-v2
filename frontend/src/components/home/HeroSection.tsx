@@ -27,7 +27,7 @@ export default function HeroSection() {
 
         <div className="flex flex-wrap items-center gap-4 pt-4">
           <a
-            href="#booking"
+            href="booking"
             className="bg-[#ff4d4d] text-white px-10 py-5 rounded-2xl font-black text-lg hover:scale-105 transition-all flex items-center gap-3 shadow-lg shadow-red-200"
           >
             BOOKING SEKARANG <ArrowRight size={24} strokeWidth={3} />

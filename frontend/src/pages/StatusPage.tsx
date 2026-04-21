@@ -28,7 +28,7 @@ export default function StatusPage() {
     try {
       // Menembak API Laravel yang baru kita buat
       const response = await axios.get(
-        `http://localhost/api/bookings/check/${searchName}`,
+        `/api/bookings/check/${searchName}`,
       );
       setResult(response.data.data);
     } catch (error: any) {

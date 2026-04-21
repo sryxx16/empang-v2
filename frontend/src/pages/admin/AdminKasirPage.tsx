@@ -44,7 +44,7 @@ export default function AdminKasirPage() {
 
   const fetchLombas = async () => {
     try {
-      const res = await axios.get("http://localhost/api/admin/lombas", {
+      const res = await axios.get("/api/admin/lombas", {
         headers: { Authorization: `Bearer ${token}` },
       });
       setLombas(res.data);
@@ -57,7 +57,7 @@ export default function AdminKasirPage() {
   const fetchOnlineBookings = async () => {
     try {
       const res = await axios.get(
-        `http://localhost/api/admin/lombas/${selectedLombaId}`,
+        `/api/admin/lombas/${selectedLombaId}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         },
@@ -75,7 +75,7 @@ export default function AdminKasirPage() {
   const fetchRekaps = async () => {
     try {
       const res = await axios.get(
-        `http://localhost/api/admin/rekaps/${selectedLombaId}`,
+        `/api/admin/rekaps/${selectedLombaId}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         },
@@ -96,7 +96,7 @@ export default function AdminKasirPage() {
     setIsSubmitting(true);
     try {
       await axios.post(
-        "http://localhost/api/admin/rekaps",
+        "/api/admin/rekaps",
         {
           lomba_id: selectedLombaId,
           nama_peserta: quickName,
@@ -123,7 +123,7 @@ export default function AdminKasirPage() {
     setIsSubmitting(true);
     try {
       await axios.post(
-        "http://localhost/api/admin/rekaps",
+        "/api/admin/rekaps",
         {
           lomba_id: selectedLombaId,
           nama_peserta: booking.nama_peserta,
@@ -164,7 +164,7 @@ export default function AdminKasirPage() {
     setIsSubmitting(true);
     try {
       await axios.post(
-        "http://localhost/api/admin/rekaps",
+        "/api/admin/rekaps",
         {
           lomba_id: selectedLombaId,
           nama_peserta: debtData.nama_peserta,
@@ -205,7 +205,7 @@ export default function AdminKasirPage() {
       return;
 
     try {
-      await axios.delete(`http://localhost/api/admin/rekaps/${id}`, {
+      await axios.delete(`/api/admin/rekaps/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       fetchRekaps();

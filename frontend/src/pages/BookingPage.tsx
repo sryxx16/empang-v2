@@ -39,7 +39,7 @@ export default function BookingPage() {
 
   const fetchHomeData = async () => {
     try {
-      const res = await axios.get("http://localhost/api/public/home");
+      const res = await axios.get("/api/public/home");
       setData(res.data);
       // Otomatis pilih lomba pertama yang sisa slotnya > 0
       const availableLomba = res.data.lombas.find((l: any) => l.sisa > 0);
@@ -63,7 +63,7 @@ export default function BookingPage() {
     setIsSubmitting(true);
     try {
       const res = await axios.post(
-        "http://localhost/api/public/booking",
+        "/api/public/booking",
         formData,
       );
       const bookedLomba = data.lombas.find(

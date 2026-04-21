@@ -38,7 +38,7 @@ export default function AdminDashboard() {
 
   const fetchLombas = async () => {
     try {
-      const res = await axios.get("http://localhost/api/admin/lombas", {
+      const res = await axios.get("/api/admin/lombas", {
         headers: { Authorization: `Bearer ${token}` },
       });
       setLombas(res.data);
@@ -55,7 +55,7 @@ export default function AdminDashboard() {
   const fetchLombaDetail = async (id: string) => {
     setIsLoading(true);
     try {
-      const res = await axios.get(`http://localhost/api/admin/lombas/${id}`, {
+      const res = await axios.get(`/api/admin/lombas/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setActiveData(res.data);
@@ -90,7 +90,7 @@ export default function AdminDashboard() {
     if (!isConfirm) return;
 
     try {
-      await axios.delete(`http://localhost/api/admin/bookings/${bookingId}`, {
+      await axios.delete(`/api/admin/bookings/${bookingId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 

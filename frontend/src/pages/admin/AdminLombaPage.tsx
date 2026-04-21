@@ -28,7 +28,7 @@ export default function AdminLombaPage() {
 
   const fetchLombas = async () => {
     try {
-      const res = await axios.get("http://localhost/api/admin/lombas", {
+      const res = await axios.get("/api/admin/lombas", {
         headers: { Authorization: `Bearer ${token}` },
       });
       setLombas(res.data);
@@ -40,7 +40,7 @@ export default function AdminLombaPage() {
   const handleCreateLomba = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await axios.post("http://localhost/api/admin/lombas", newLomba, {
+      await axios.post("/api/admin/lombas", newLomba, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setShowModal(false);
@@ -59,7 +59,7 @@ export default function AdminLombaPage() {
     )
       return;
     try {
-      await axios.delete(`http://localhost/api/admin/lombas/${id}`, {
+      await axios.delete(`/api/admin/lombas/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       fetchLombas();

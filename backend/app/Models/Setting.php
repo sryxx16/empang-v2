@@ -12,7 +12,14 @@ class Setting extends Model
     protected $fillable = [
         'nama_pemancingan',
         'nomor_wa',
+        'lokasi',
         'info_rekening',
-        'peraturan_empang'
+        'peraturan_empang',
+        'potret_kami'
+    ];
+
+    protected $casts = [
+        'potret_kami' => 'array'
     ];
 }
+

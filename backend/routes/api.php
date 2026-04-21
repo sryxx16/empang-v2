@@ -10,9 +10,14 @@ use App\Http\Controllers\PublicController;
 use Illuminate\Support\Facades\Route;
 
 
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');
+Route::get('/seed-admin', function () {
+    try {
+        \Illuminate\Support\Facades\Artisan::call('db:seed', ['--force' => true]);
+        return "Admin berhasil dibuat! Email: admin@gmail.com, Pass: password";
+    } catch (\Exception $e) {
+        return "Gagal: " . $e->getMessage();
+    }
+});
 
 Route::post('/bookings', [BookingController::class, 'store']);
 Route::get('/bookings/check/{nama}', [BookingController::class, 'checkStatus']);
@@ -33,6 +38,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/admin/settings', [SettingController::class, 'index']);
     Route::put('/admin/settings', [SettingController::class, 'update']);
+    Route::post('/admin/settings/gallery', [SettingController::class, 'uploadGallery']);
+    Route::delete('/admin/settings/gallery', [SettingController::class, 'deleteGalleryItem']);
 
     // AREA JADWAL LOMBA
     Route::get('/admin/lombas', [LombaController::class, 'index']);

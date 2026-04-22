@@ -33,7 +33,7 @@ export default function AdminLayout({
       {/* ========================================== */}
       <aside className="w-64 bg-slate-900 text-white p-6 hidden lg:flex flex-col print:hidden sticky top-0 h-screen">
         <div className="flex items-center gap-3 mb-10">
-          <img src="/logo.png" alt="Combro Admin Logo" className="h-10 w-auto" />
+          <img src="/combro-fishing-logo.png" alt="Combro Admin Logo" className="h-10 w-auto" />
           <span className="font-black text-xl tracking-tighter">
             COMBRO ADMIN
           </span>

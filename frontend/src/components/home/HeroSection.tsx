@@ -25,9 +25,9 @@ export default function HeroSection() {
 
   return (
     <section className="relative w-full max-w-7xl mx-auto px-6 pt-16 pb-32 flex flex-col lg:flex-row items-center gap-16 overflow-hidden">
-      
+
       {/* KIRI: TEKS INFORMASI */}
-      <motion.div 
+      <motion.div
         className="flex-1 space-y-8 z-10"
         variants={containerVariants}
         initial="hidden"
@@ -56,7 +56,7 @@ export default function HeroSection() {
             href="/booking"
             className="group bg-gradient-to-r from-blue-600 to-cyan-500 text-white px-8 sm:px-10 py-4 sm:py-5 rounded-2xl font-black text-base sm:text-lg hover:scale-105 transition-all flex items-center gap-3 shadow-xl shadow-blue-500/20 dark:shadow-blue-900/40 w-full sm:w-auto justify-center"
           >
-            BOOKING SEKARANG 
+            BOOKING SEKARANG
             <ArrowRight size={24} strokeWidth={3} className="group-hover:translate-x-1 transition-transform" />
           </a>
           <button className="bg-slate-900 dark:bg-white text-white dark:text-slate-900 px-8 sm:px-10 py-4 sm:py-5 rounded-2xl font-black text-base sm:text-lg hover:opacity-90 transition-all shadow-lg w-full sm:w-auto">
@@ -66,14 +66,14 @@ export default function HeroSection() {
       </motion.div>
 
       {/* KANAN: 3D SPLIT / FLOATING CARD PERSPECTIVE */}
-      <motion.div 
+      <motion.div
         className="flex-1 w-full lg:w-auto relative perspective-1000 z-10 mt-10 lg:mt-0"
         initial={{ opacity: 0, scale: 0.8, rotateY: 15 }}
         animate={{ opacity: 1, scale: 1, rotateY: 0 }}
         transition={{ duration: 0.8, type: "spring", bounce: 0.4 }}
       >
         <motion.div style={{ y: y1 }} className="relative z-20">
-          <motion.div 
+          <motion.div
             whileHover={{ scale: 1.02, rotateX: 5, rotateY: -5 }}
             className="relative rounded-[2rem] overflow-hidden border-[8px] sm:border-[12px] border-white dark:border-slate-800 shadow-2xl transition-all duration-500 aspect-[4/5] bg-slate-200 dark:bg-slate-700 w-full lg:max-w-[450px] ml-auto origin-center"
           >
@@ -82,24 +82,22 @@ export default function HeroSection() {
               alt="Fisherman"
               className="w-full h-full object-cover"
             />
-            
+
             {/* Overlay Glassmorphism */}
             <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-transparent to-transparent"></div>
 
             {/* Badge Bawah */}
-            <div className="absolute bottom-6 sm:bottom-8 left-6 sm:left-8 right-6 sm:right-8 bg-white/20 dark:bg-black/40 backdrop-blur-md p-6 rounded-2xl border border-white/30 dark:border-white/10 shadow-lg transform translate-y-2 hover:translate-y-0 transition-transform">
+            {/* <div className="absolute bottom-6 sm:bottom-8 left-6 sm:left-8 right-6 sm:right-8 bg-white/20 dark:bg-black/40 backdrop-blur-md p-6 rounded-2xl border border-white/30 dark:border-white/10 shadow-lg transform translate-y-2 hover:translate-y-0 transition-transform">
               <p className="text-white font-black text-xl mb-1 drop-shadow-md">
-                Lapak A1 - VIP
               </p>
               <p className="text-white/80 font-bold uppercase text-[10px] sm:text-xs tracking-widest drop-shadow-sm">
-                Tersisa 1 Slot Untuk Minggu Ini!
               </p>
-            </div>
+            </div> */}
           </motion.div>
         </motion.div>
 
         {/* Gambar Ornamen Tumpuk di Belakang (3D Effect) */}
-        <motion.div 
+        {/* <motion.div 
           style={{ y: y2 }}
           className="absolute -top-10 -left-10 w-48 h-48 sm:w-64 sm:h-64 rounded-[2rem] overflow-hidden border-[6px] border-white dark:border-slate-800 shadow-xl z-0 opacity-70 hidden sm:block"
         >
@@ -109,7 +107,7 @@ export default function HeroSection() {
               className="w-full h-full object-cover scale-110"
             />
             <div className="absolute inset-0 bg-blue-500/20 dark:bg-black/30 mix-blend-overlay"></div>
-        </motion.div>
+        </motion.div> */}
       </motion.div>
 
       {/* Decorative Blob */}

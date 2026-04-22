@@ -32,7 +32,7 @@ export default function Navbar() {
     <nav className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-md sticky top-0 z-50 border-b border-slate-100 dark:border-slate-800 transition-colors duration-300">
       <div className="max-w-7xl mx-auto px-6 h-20 flex justify-between items-center">
         <Link to="/" className="flex items-center gap-3">
-          <img src="/logo.png" alt="Combro Fishing Logo" className="h-10 w-auto" />
+          <img src="/combro-fishing-logo.png" alt="Combro Fishing Logo" className="h-10 w-auto" />
           <span className="text-xl md:text-2xl font-black text-slate-900 dark:text-white tracking-tighter uppercase transition-colors duration-300">
             COMBRO FISHING
           </span>

@@ -40,6 +40,27 @@ class RekapController extends Controller
         ]);
     }
 
+    // Memperbarui data (misal: pelunasan hutang)
+    public function update(Request $request, $id)
+    {
+        $rekap = Rekap::find($id);
+        if (!$rekap) {
+            return response()->json(['message' => 'Data tidak ditemukan'], 404);
+        }
+
+        $rekap->update([
+            'nominal_bayar' => $request->nominal_bayar ?? $rekap->nominal_bayar,
+            'metode_bayar' => $request->metode_bayar ?? $rekap->metode_bayar,
+            'status_bayar' => $request->status_bayar ?? $rekap->status_bayar,
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Data berhasil diperbarui!',
+            'data' => $rekap
+        ]);
+    }
+
     // Menghapus data
     public function destroy($id)
     {

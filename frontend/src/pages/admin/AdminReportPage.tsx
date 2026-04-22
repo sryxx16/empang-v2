@@ -220,33 +220,7 @@ export default function AdminReportPage() {
         </div>
 
         {/* 2. STATISTIK TAMBAHAN */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
-          <div className="bg-gradient-to-br from-purple-500 to-purple-600 text-white p-6 rounded-[32px] shadow-lg">
-            <p className="text-xs font-bold text-purple-100 uppercase tracking-widest mb-2">
-              Rata-rata per Transaksi
-            </p>
-            <h3 className="text-3xl font-black">
-              Rp {data.summary.avg_per_transaksi?.toLocaleString("id-ID")}
-            </h3>
-          </div>
-
-          {data.summary.trending_day && (
-            <div className="bg-gradient-to-br from-amber-500 to-amber-600 text-white p-6 rounded-[32px] shadow-lg">
-              <p className="text-xs font-bold text-amber-100 uppercase tracking-widest mb-2 flex items-center gap-2">
-                <TrendingUp size={14} /> Hari Terbanyak
-              </p>
-              <h3 className="text-2xl font-black">
-                {data.summary.trending_day.tanggal}
-              </h3>
-              <p className="text-sm text-amber-100 mt-1">
-                Rp{" "}
-                {Number(
-                  data.summary.trending_day.total_pendapatan,
-                ).toLocaleString("id-ID")}
-              </p>
-            </div>
-          )}
-
+        <div className="grid grid-cols-1 gap-6 mb-10">
           <div className="bg-white p-6 rounded-[32px] border border-slate-200 shadow-sm">
             <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4">
               Distribusi Pembayaran
@@ -286,51 +260,7 @@ export default function AdminReportPage() {
           </div>
         </div>
 
-        {/* 3. BREAKDOWN PER LOMBA */}
-        {data.by_lomba && data.by_lomba.length > 0 && (
-          <div className="bg-white rounded-[32px] border border-slate-200 overflow-hidden shadow-sm mb-10">
-            <div className="p-6 border-b border-slate-100">
-              <h2 className="font-black text-slate-800 uppercase tracking-tight flex items-center gap-2">
-                <Calendar size={18} className="text-[#ff4d4d]" /> Breakdown Per
-                Lomba
-              </h2>
-            </div>
-            <div className="overflow-x-auto">
-              <table className="w-full text-left">
-                <thead className="bg-slate-50 text-[10px] font-black text-slate-400 uppercase tracking-widest">
-                  <tr>
-                    <th className="p-4">Nama Lomba</th>
-                    <th className="p-4">Tanggal</th>
-                    <th className="p-4">Peserta</th>
-                    <th className="p-4 text-right">Total Pendapatan</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-100">
-                  {data.by_lomba.map((lomba: any) => (
-                    <tr
-                      key={lomba.id}
-                      className="hover:bg-slate-50 transition-colors font-bold text-sm"
-                    >
-                      <td className="p-4 text-slate-800">{lomba.nama_lomba}</td>
-                      <td className="p-4 text-slate-600">
-                        {new Date(lomba.tanggal_lomba).toLocaleDateString(
-                          "id-ID",
-                        )}
-                      </td>
-                      <td className="p-4 text-slate-600">
-                        {lomba.jumlah_peserta} Orang
-                      </td>
-                      <td className="p-4 text-right text-green-600">
-                        Rp{" "}
-                        {Number(lomba.total_pendapatan).toLocaleString("id-ID")}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        )}
+
 
         {/* 4. LAPORAN HARIAN DAN BULANAN */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">

@@ -10,10 +10,11 @@ import {
   Trash2,
   Wallet,
   X, // <-- Icon X buat tutup modal
+  Edit2, // <-- ICON BARU
 } from "lucide-react";
 import AdminLayout from "../../components/admin/AdminLayout";
 
-export default function AdminKasirPage() {
+export default function AdminRekapHybridPage() {
   const [lombas, setLombas] = useState<any[]>([]);
   const [selectedLombaId, setSelectedLombaId] = useState<string>("");
   const [rekaps, setRekaps] = useState<any[]>([]);
@@ -28,6 +29,13 @@ export default function AdminKasirPage() {
   const [isDebtModalOpen, setIsDebtModalOpen] = useState(false);
   const [debtData, setDebtData] = useState<any>(null);
   const [partialAmount, setPartialAmount] = useState("");
+
+  // State untuk Modal Edit Hutang
+  const [isEditDebtModalOpen, setIsEditDebtModalOpen] = useState(false);
+  const [editDebtData, setEditDebtData] = useState<any>(null);
+  const [editNominal, setEditNominal] = useState("");
+  const [editMetodeBayar, setEditMetodeBayar] = useState("tunai");
+  const [editStatusBayar, setEditStatusBayar] = useState("debt");
 
   const token = localStorage.getItem("admin_token");
 
@@ -190,6 +198,38 @@ export default function AdminKasirPage() {
     } catch (err) {
       console.error(err);
       alert("Gagal mencatat hutang");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  // --- FUNGSI EDIT REKAP (KHUSUS HUTANG) ---
+  const openEditDebtModal = (rekap: any) => {
+    setEditDebtData(rekap);
+    setEditNominal(rekap.nominal_bayar !== null ? rekap.nominal_bayar.toString() : "0");
+    setEditMetodeBayar(rekap.metode_bayar);
+    setEditStatusBayar(rekap.status_bayar);
+    setIsEditDebtModalOpen(true);
+  };
+
+  const submitEditDebt = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    try {
+      await axios.put(
+        `/api/admin/rekaps/${editDebtData.id}`,
+        {
+          nominal_bayar: Number(editNominal),
+          metode_bayar: editMetodeBayar,
+          status_bayar: editStatusBayar,
+        },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      setIsEditDebtModalOpen(false);
+      fetchRekaps();
+    } catch (err) {
+      console.error(err);
+      alert("Gagal mengupdate data");
     } finally {
       setIsSubmitting(false);
     }
@@ -439,14 +479,26 @@ export default function AdminKasirPage() {
                           )}
                         </div>
                       </div>
-                      {/* Tombol Hapus */}
-                      <button
-                        onClick={() => handleDeleteRekap(r.id)}
-                        className="text-slate-300 hover:text-red-500 transition-colors p-2 rounded-lg hover:bg-red-50"
-                        title="Hapus jika salah ketik/ganda"
-                      >
-                        <Trash2 size={16} />
-                      </button>
+                      <div className="flex gap-1">
+                        {/* Tombol Edit Khusus Hutang */}
+                        {isDebt && (
+                          <button
+                            onClick={() => openEditDebtModal(r)}
+                            className="text-slate-300 hover:text-blue-500 transition-colors p-2 rounded-lg hover:bg-blue-50"
+                            title="Edit / Pelunasan Hutang"
+                          >
+                            <Edit2 size={16} />
+                          </button>
+                        )}
+                        {/* Tombol Hapus */}
+                        <button
+                          onClick={() => handleDeleteRekap(r.id)}
+                          className="text-slate-300 hover:text-red-500 transition-colors p-2 rounded-lg hover:bg-red-50"
+                          title="Hapus jika salah ketik/ganda"
+                        >
+                          <Trash2 size={16} />
+                        </button>
+                      </div>
                     </li>
                   );
                 })
@@ -502,6 +554,84 @@ export default function AdminKasirPage() {
                   className="w-full bg-orange-500 text-white p-4 rounded-2xl font-black shadow-lg hover:bg-orange-600 transition-colors disabled:opacity-50 mt-4"
                 >
                   SIMPAN DATA HUTANG
+                </button>
+              </form>
+            </div>
+          </div>
+        )}
+
+        {/* ========================================= */}
+        {/* MODAL POP-UP EDIT HUTANG                  */}
+        {/* ========================================= */}
+        {isEditDebtModalOpen && (
+          <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex justify-center items-center z-50 p-4 animate-in fade-in duration-200">
+            <div className="bg-white rounded-3xl p-8 w-full max-w-sm shadow-2xl relative">
+              <button
+                onClick={() => setIsEditDebtModalOpen(false)}
+                className="absolute top-6 right-6 text-slate-400 hover:text-slate-700"
+              >
+                <X size={24} />
+              </button>
+
+              <h2 className="text-2xl font-black mb-1 uppercase flex items-center gap-2 text-blue-500">
+                <Edit2 /> Edit Pembayaran
+              </h2>
+              <p className="text-sm font-bold text-slate-500 mb-6">
+                Peserta:{" "}
+                <span className="text-slate-900">{editDebtData?.nama_peserta}</span>
+              </p>
+
+              <form onSubmit={submitEditDebt} className="space-y-4">
+                <div>
+                  <label className="block text-xs font-black text-slate-400 uppercase tracking-widest mb-2">
+                    Total Uang Masuk Saat Ini (Rp)
+                  </label>
+                  <input
+                    type="number"
+                    required
+                    value={editNominal}
+                    onChange={(e) => setEditNominal(e.target.value)}
+                    className="w-full p-4 bg-slate-50 border-2 border-slate-200 rounded-2xl font-bold outline-none focus:border-blue-500 text-xl"
+                  />
+                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-2">
+                    Harga Tiket Full: Rp {(activeLomba?.harga_tiket || 0).toLocaleString("id-ID")}
+                  </p>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-black text-slate-400 uppercase tracking-widest mb-2">
+                    Metode Bayar
+                  </label>
+                  <select
+                    value={editMetodeBayar}
+                    onChange={(e) => setEditMetodeBayar(e.target.value)}
+                    className="w-full p-3 bg-slate-50 border-2 border-slate-200 rounded-2xl font-bold outline-none focus:border-blue-500"
+                  >
+                    <option value="tunai">Tunai</option>
+                    <option value="transfer">Transfer</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-black text-slate-400 uppercase tracking-widest mb-2">
+                    Status Bayar
+                  </label>
+                  <select
+                    value={editStatusBayar}
+                    onChange={(e) => setEditStatusBayar(e.target.value)}
+                    className="w-full p-3 bg-slate-50 border-2 border-slate-200 rounded-2xl font-bold outline-none focus:border-blue-500"
+                  >
+                    <option value="debt">Masih Hutang / DP</option>
+                    <option value="lunas">Udah Lunas</option>
+                  </select>
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={isSubmitting || !editNominal}
+                  className="w-full bg-blue-500 text-white p-4 rounded-2xl font-black shadow-lg hover:bg-blue-600 transition-colors disabled:opacity-50 mt-4 uppercase"
+                >
+                  Simpan Perubahan
                 </button>
               </form>
             </div>

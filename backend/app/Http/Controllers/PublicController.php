@@ -24,6 +24,9 @@ class PublicController extends Controller
                     'nama_lomba' => $l->nama_lomba,
                     'tanggal_lomba' => $l->tanggal_lomba,
                     'sisa' => max(0, $l->kuota - $terisi),
+                    'terisi' => $terisi,
+                    'kuota' => $l->kuota,
+                    'harga_tiket' => $l->harga_tiket,
                     'total' => $l->kuota
                 ];
             })

@@ -9,19 +9,9 @@ use App\Http\Controllers\RekapController;
 use App\Http\Controllers\PublicController;
 use Illuminate\Support\Facades\Route;
 
-
-Route::get('/seed-admin', function () {
-    try {
-        \Illuminate\Support\Facades\Artisan::call('db:seed', ['--force' => true]);
-        return "Admin berhasil dibuat! Email: admin@gmail.com, Pass: password";
-    } catch (\Exception $e) {
-        return "Gagal: " . $e->getMessage();
-    }
-});
-
 Route::post('/bookings', [BookingController::class, 'store']);
 Route::get('/bookings/check/{nama}', [BookingController::class, 'checkStatus']);
-Route::post('/login', [AuthController::class, 'login']);
+Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:5,1');
 
 // --- AREA PUBLIK (Bebas Akses Tanpa Login) ---
 Route::get('/public/home', [PublicController::class, 'getHomeData']);
@@ -49,5 +39,6 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/admin/rekaps/{lomba_id}', [RekapController::class, 'getByLomba']);
     Route::post('/admin/rekaps', [RekapController::class, 'store']);
+    Route::put('/admin/rekaps/{id}', [RekapController::class, 'update']);
     Route::delete('/admin/rekaps/{id}', [RekapController::class, 'destroy']);
 });

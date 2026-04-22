@@ -11,7 +11,7 @@ import StatusPage from "./pages/StatusPage";
 import AdminLoginPage from "./pages/admin/AdminLoginPage";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminReportPage from "./pages/admin/AdminReportPage";
-import AdminKasirPage from "./pages/admin/AdminKasirPage";
+import AdminRekapHybridPage from "./pages/admin/AdminRekapHybridPage";
 import AdminLombaPage from "./pages/admin/AdminLombaPage";
 
 function App() {
@@ -24,11 +24,11 @@ function App() {
         <Route path="/status" element={<StatusPage />} />
 
         {/* Rute Admin */}
-        <Route path="/admin/login" element={<AdminLoginPage />} />
+        <Route path="/empang-rahasia" element={<AdminLoginPage />} />
         <Route path="/admin/dashboard" element={<AdminDashboard />} />
         <Route path="/admin/reports" element={<AdminReportPage />} />
         <Route path="/admin/settings" element={<AdminSettingsPage />} />
-        <Route path="/admin/kasir" element={<AdminKasirPage />} />
+        <Route path="/admin/rekap-hybrid" element={<AdminRekapHybridPage />} />
         <Route path="/admin/lomba" element={<AdminLombaPage />} />
       </Routes>
     </BrowserRouter>

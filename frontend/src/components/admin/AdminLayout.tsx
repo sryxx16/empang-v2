@@ -33,7 +33,7 @@ export default function AdminLayout({
       {/* ========================================== */}
       <aside className="w-64 bg-slate-900 text-white p-6 hidden lg:flex flex-col print:hidden sticky top-0 h-screen">
         <div className="flex items-center gap-3 mb-10">
-          <div className="w-8 h-8 bg-[#ff4d4d] rounded-lg shadow-lg shadow-red-500/20"></div>
+          <img src="/logo.png" alt="Combro Admin Logo" className="h-10 w-auto" />
           <span className="font-black text-xl tracking-tighter">
             COMBRO ADMIN
           </span>
@@ -44,7 +44,7 @@ export default function AdminLayout({
             to="/admin/dashboard"
             className={`w-full flex items-center gap-3 p-3 rounded-xl font-bold transition-all ${
               isActive("/admin/dashboard")
-                ? "bg-[#ff4d4d] text-white shadow-lg shadow-red-500/20"
+                ? "bg-blue-600 text-white shadow-lg shadow-blue-500/20"
                 : "text-slate-400 hover:text-white hover:bg-slate-800"
             }`}
           >
@@ -56,7 +56,7 @@ export default function AdminLayout({
             to="/admin/lomba"
             className={`w-full flex items-center gap-3 p-3 rounded-xl font-bold transition-all ${
               isActive("/admin/lomba")
-                ? "bg-[#ff4d4d] text-white shadow-lg shadow-red-500/20"
+                ? "bg-blue-600 text-white shadow-lg shadow-blue-500/20"
                 : "text-slate-400 hover:text-white hover:bg-slate-800"
             }`}
           >
@@ -64,10 +64,10 @@ export default function AdminLayout({
           </Link>
 
           <Link
-            to="/admin/kasir"
+            to="/admin/rekap-hybrid"
             className={`w-full flex items-center gap-3 p-3 rounded-xl font-bold transition-all ${
-              isActive("/admin/kasir")
-                ? "bg-[#ff4d4d] text-white shadow-lg shadow-red-500/20"
+              isActive("/admin/rekap-hybrid")
+                ? "bg-blue-600 text-white shadow-lg shadow-blue-500/20"
                 : "text-slate-400 hover:text-white hover:bg-slate-800"
             }`}
           >
@@ -78,7 +78,7 @@ export default function AdminLayout({
             to="/admin/reports"
             className={`w-full flex items-center gap-3 p-3 rounded-xl font-bold transition-all ${
               isActive("/admin/reports")
-                ? "bg-[#ff4d4d] text-white shadow-lg shadow-red-500/20"
+                ? "bg-blue-600 text-white shadow-lg shadow-blue-500/20"
                 : "text-slate-400 hover:text-white hover:bg-slate-800"
             }`}
           >
@@ -89,7 +89,7 @@ export default function AdminLayout({
             to="/admin/settings"
             className={`w-full flex items-center gap-3 p-3 rounded-xl font-bold transition-all ${
               isActive("/admin/settings")
-                ? "bg-[#ff4d4d] text-white shadow-lg shadow-red-500/20"
+                ? "bg-blue-600 text-white shadow-lg shadow-blue-500/20"
                 : "text-slate-400 hover:text-white hover:bg-slate-800"
             }`}
           >

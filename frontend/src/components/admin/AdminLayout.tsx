@@ -42,11 +42,10 @@ export default function AdminLayout({
         <nav className="flex-grow space-y-2">
           <Link
             to="/admin/dashboard"
-            className={`w-full flex items-center gap-3 p-3 rounded-xl font-bold transition-all ${
-              isActive("/admin/dashboard")
-                ? "bg-blue-600 text-white shadow-lg shadow-blue-500/20"
-                : "text-slate-400 hover:text-white hover:bg-slate-800"
-            }`}
+            className={`w-full flex items-center gap-3 p-3 rounded-xl font-bold transition-all ${isActive("/admin/dashboard")
+              ? "bg-blue-600 text-white shadow-lg shadow-blue-500/20"
+              : "text-slate-400 hover:text-white hover:bg-slate-800"
+              }`}
           >
             <LayoutDashboard size={20} /> Dashboard
           </Link>
@@ -54,44 +53,40 @@ export default function AdminLayout({
           {/* MENU BARU: JADWAL LOMBA */}
           <Link
             to="/admin/lomba"
-            className={`w-full flex items-center gap-3 p-3 rounded-xl font-bold transition-all ${
-              isActive("/admin/lomba")
-                ? "bg-blue-600 text-white shadow-lg shadow-blue-500/20"
-                : "text-slate-400 hover:text-white hover:bg-slate-800"
-            }`}
+            className={`w-full flex items-center gap-3 p-3 rounded-xl font-bold transition-all ${isActive("/admin/lomba")
+              ? "bg-blue-600 text-white shadow-lg shadow-blue-500/20"
+              : "text-slate-400 hover:text-white hover:bg-slate-800"
+              }`}
           >
             <Calendar size={20} /> Jadwal Lomba
           </Link>
 
           <Link
             to="/admin/rekap-hybrid"
-            className={`w-full flex items-center gap-3 p-3 rounded-xl font-bold transition-all ${
-              isActive("/admin/rekap-hybrid")
-                ? "bg-blue-600 text-white shadow-lg shadow-blue-500/20"
-                : "text-slate-400 hover:text-white hover:bg-slate-800"
-            }`}
+            className={`w-full flex items-center gap-3 p-3 rounded-xl font-bold transition-all ${isActive("/admin/rekap-hybrid")
+              ? "bg-blue-600 text-white shadow-lg shadow-blue-500/20"
+              : "text-slate-400 hover:text-white hover:bg-slate-800"
+              }`}
           >
-            <Camera size={20} /> Hybrid Check-IN
+            <Camera size={20} /> Rekapan
           </Link>
 
           <Link
             to="/admin/reports"
-            className={`w-full flex items-center gap-3 p-3 rounded-xl font-bold transition-all ${
-              isActive("/admin/reports")
-                ? "bg-blue-600 text-white shadow-lg shadow-blue-500/20"
-                : "text-slate-400 hover:text-white hover:bg-slate-800"
-            }`}
+            className={`w-full flex items-center gap-3 p-3 rounded-xl font-bold transition-all ${isActive("/admin/reports")
+              ? "bg-blue-600 text-white shadow-lg shadow-blue-500/20"
+              : "text-slate-400 hover:text-white hover:bg-slate-800"
+              }`}
           >
             <FileText size={20} /> Laporan Keuangan
           </Link>
 
           <Link
             to="/admin/settings"
-            className={`w-full flex items-center gap-3 p-3 rounded-xl font-bold transition-all ${
-              isActive("/admin/settings")
-                ? "bg-blue-600 text-white shadow-lg shadow-blue-500/20"
-                : "text-slate-400 hover:text-white hover:bg-slate-800"
-            }`}
+            className={`w-full flex items-center gap-3 p-3 rounded-xl font-bold transition-all ${isActive("/admin/settings")
+              ? "bg-blue-600 text-white shadow-lg shadow-blue-500/20"
+              : "text-slate-400 hover:text-white hover:bg-slate-800"
+              }`}
           >
             <Settings size={20} /> Pengaturan Web
           </Link>

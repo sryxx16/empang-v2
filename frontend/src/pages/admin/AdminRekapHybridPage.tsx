@@ -281,7 +281,7 @@ export default function AdminRekapHybridPage() {
         <header className="mb-8 flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
           <div>
             <h1 className="text-3xl font-black text-slate-900 tracking-tight flex items-center gap-3 uppercase">
-              <Zap className="text-[#ff4d4d]" size={32} /> Hybrid Check-in
+              <Zap className="text-[#ff4d4d]" size={32} /> Rekap Peserta
             </h1>
             <p className="text-slate-500 font-medium mt-2">
               Kelola antrean online dan pendaftar langsung dalam satu layar.
@@ -460,13 +460,12 @@ export default function AdminRekapHybridPage() {
                         {/* Menampilkan status metode bayar atau status hutang */}
                         <div className="flex gap-2 items-center mt-1">
                           <span
-                            className={`text-[9px] font-black uppercase px-2 py-0.5 rounded w-fit ${
-                              isDebt
-                                ? "bg-orange-100 text-orange-700"
-                                : r.metode_bayar === "tunai"
-                                  ? "bg-green-100 text-green-700"
-                                  : "bg-blue-100 text-blue-700"
-                            }`}
+                            className={`text-[9px] font-black uppercase px-2 py-0.5 rounded w-fit ${isDebt
+                              ? "bg-orange-100 text-orange-700"
+                              : r.metode_bayar === "tunai"
+                                ? "bg-green-100 text-green-700"
+                                : "bg-blue-100 text-blue-700"
+                              }`}
                           >
                             {isDebt ? "HUTANG" : r.metode_bayar}
                           </span>

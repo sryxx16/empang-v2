@@ -6,7 +6,7 @@ const reviews = [
   {
     name: "Pak Haji Mulyono",
     role: "Angler Senior",
-    text: "Dulu harus datang subuh buat rebutan lapak, sekarang sambil ngopi di rumah sudah beres pendaftarannya. Mantap!",
+    text: "Dulu harus bertanya dulu untuk liat lapak yang kosong, sekarang enakk bisa liat dari rumah lewat HP. Mantap!",
     initial: "M"
   },
   {
@@ -102,8 +102,8 @@ export default function TestimonialsFAQ() {
                   <span className={`font-black text-lg uppercase tracking-tight transition-colors ${openIdx === i ? "text-blue-600 dark:text-cyan-400" : "text-slate-800 dark:text-slate-200"}`}>
                     {faq.q}
                   </span>
-                  <motion.div 
-                    animate={{ rotate: openIdx === i ? 180 : 0 }} 
+                  <motion.div
+                    animate={{ rotate: openIdx === i ? 180 : 0 }}
                     transition={{ duration: 0.3 }}
                     className={openIdx === i ? "text-blue-600 dark:text-cyan-400" : "text-slate-400"}
                   >

@@ -176,11 +176,11 @@ export default function HomePage() {
       </motion.section>
 
       {/* 3. KOMPONEN LAMA LU TETAP AMAN DI SINI */}
-      <FeaturesSection />
-      <AboutSection />
-      <ProcessSection />
-      <GallerySection images={data?.settings?.potret_kami} />
-      <TestimonialsFAQ />
+      <div id="fasilitas"><FeaturesSection /></div>
+      <div id="tentang-kami"><AboutSection /></div>
+      <div id="cara-booking"><ProcessSection /></div>
+      <div id="galeri"><GallerySection images={data?.settings?.potret_kami} /></div>
+      <div id="faq"><TestimonialsFAQ /></div>
 
       <Footer />
     </div>

@@ -3,11 +3,11 @@ import { Map, Clock, Trophy, Wallet } from "lucide-react";
 import { motion } from "framer-motion";
 
 const features = [
-  {
-    icon: <Map className="text-blue-500 dark:text-cyan-400" size={32} strokeWidth={1.5} />,
-    title: "DENAH LAPAK PRESISI",
-    desc: "Tidak ada lagi rebutan posisi. Pilih lapak strategismu sejak dari rumah.",
-  },
+  // {
+  //   icon: <Map className="text-blue-500 dark:text-cyan-400" size={32} strokeWidth={1.5} />,
+  //   title: "DENAH LAPAK PRESISI",
+  //   desc: "Tidak ada lagi rebutan posisi. Pilih lapak strategismu sejak dari rumah.",
+  // },
   {
     icon: <Clock className="text-blue-500 dark:text-cyan-400" size={32} strokeWidth={1.5} />,
     title: "SISTEM 24 JAM",
@@ -45,7 +45,7 @@ export default function FeaturesSection() {
 
       <div className="max-w-7xl mx-auto flex flex-col lg:flex-row gap-16 items-start relative z-10">
         {/* Teks Penjelasan Kiri */}
-        <motion.div 
+        <motion.div
           className="lg:w-1/3 sticky top-32"
           initial={{ opacity: 0, x: -50 }}
           whileInView={{ opacity: 1, x: 0 }}
@@ -53,7 +53,7 @@ export default function FeaturesSection() {
           transition={{ duration: 0.6 }}
         >
           <h2 className="text-4xl md:text-5xl font-black text-slate-900 dark:text-white mb-6 uppercase tracking-tighter leading-tight transition-colors">
-            Fasilitas <br className="hidden lg:block" /> 
+            Fasilitas <br className="hidden lg:block" />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-500">Premium</span>
           </h2>
           <p className="text-lg text-slate-500 dark:text-slate-400 font-medium mb-8 transition-colors">
@@ -66,7 +66,7 @@ export default function FeaturesSection() {
         </motion.div>
 
         {/* Grid Kotak Fitur Kanan */}
-        <motion.div 
+        <motion.div
           className="lg:w-2/3 grid sm:grid-cols-2 gap-6"
           variants={containerVariants}
           initial="hidden"

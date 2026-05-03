@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { User, Moon, Sun } from "lucide-react";
+import { User, Moon, Sun, ChevronDown } from "lucide-react";
 import { Link } from "react-router-dom";
 
 export default function Navbar() {
@@ -46,27 +46,39 @@ export default function Navbar() {
         </Link>
 
         <div className="hidden lg:flex items-center gap-8 font-bold text-[15px] text-slate-600 dark:text-slate-300">
-          <Link
-            to="/"
-            className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
-          >
-            Beranda
-          </Link>
-          {/* <Link to="/status" className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
-            Cek Status
-          </Link> */}
+          <div className="relative group">
+            <Link
+              to="/"
+              className="flex items-center gap-1 hover:text-blue-600 dark:hover:text-blue-400 transition-colors cursor-pointer pb-2"
+            >
+              Beranda <ChevronDown size={16} className="group-hover:rotate-180 transition-transform duration-300" />
+            </Link>
+            
+            <div className="absolute left-0 top-full mt-2 w-48 bg-white dark:bg-slate-800 rounded-xl shadow-xl shadow-slate-200/50 dark:shadow-slate-900/50 border border-slate-100 dark:border-slate-700 py-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform origin-top-left group-hover:translate-y-0 translate-y-2 z-50">
+              <a href="/#fasilitas" className="block px-4 py-2 text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700/50 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+                Fasilitas Premium
+              </a>
+              <a href="/#tentang-kami" className="block px-4 py-2 text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700/50 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+                Tentang Kami
+              </a>
+              <a href="/#cara-booking" className="block px-4 py-2 text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700/50 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+                Cara Booking
+              </a>
+              <a href="/#galeri" className="block px-4 py-2 text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700/50 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+                Galeri Kami
+              </a>
+              <a href="/#faq" className="block px-4 py-2 text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700/50 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+                FAQ
+              </a>
+            </div>
+          </div>
+          
           <Link
             to="/jadwal"
-            className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+            className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors pb-2"
           >
             Jadwal Lomba
           </Link>
-          <a
-            href="/#tentang-kami"
-            className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
-          >
-            Tentang Kami
-          </a>
         </div>
 
         <div className="flex items-center gap-2 md:gap-4">

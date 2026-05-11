@@ -1,5 +1,6 @@
 import React from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import axios from "axios";
 import {
   LayoutDashboard,
   FileText,
@@ -17,10 +18,20 @@ export default function AdminLayout({
   const location = useLocation();
   const navigate = useNavigate();
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    const token = localStorage.getItem("admin_token");
+    if (token) {
+      try {
+        await axios.post("/api/logout", {}, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+      } catch (err) {
+        console.error("Logout error", err);
+      }
+    }
     localStorage.removeItem("admin_token");
     localStorage.removeItem("admin_user");
-    navigate("/admin/login");
+    window.location.href = "/empang-rahasia";
   };
 
   // Fungsi pintar untuk mendeteksi apakah menu sedang aktif

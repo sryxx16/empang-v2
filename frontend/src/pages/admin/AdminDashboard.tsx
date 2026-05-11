@@ -29,7 +29,7 @@ export default function AdminDashboard() {
   // 1. Ambil semua daftar lomba untuk dropdown
   useEffect(() => {
     if (!token) {
-      navigate("/admin/login");
+      navigate("/empang-rahasia");
       return;
     }
     fetchLombas();

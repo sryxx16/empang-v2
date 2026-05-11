@@ -77,7 +77,7 @@ export default function Navbar() {
             to="/status"
             className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors pb-2"
           >
-            Status Lomba
+            Status Booking
           </Link>
 
           <Link

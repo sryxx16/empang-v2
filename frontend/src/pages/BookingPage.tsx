@@ -362,12 +362,16 @@ export default function BookingPage() {
                         size={20}
                       />
                       <input
-                        type="number"
+                        type="text"
                         required
                         value={formData.no_wa}
-                        onChange={(e) =>
-                          setFormData({ ...formData, no_wa: e.target.value })
-                        }
+                        onChange={(e) => {
+                          const val = e.target.value.replace(/\D/g, "");
+                          if (val.length <= 14) {
+                            setFormData({ ...formData, no_wa: val });
+                          }
+                        }}
+                        maxLength={14}
                         placeholder="Misal: 08123456789"
                         className="w-full pl-12 pr-4 py-4 bg-slate-50 dark:bg-slate-800/50 border-2 border-slate-200 dark:border-slate-700 rounded-2xl focus:border-cyan-500 dark:focus:border-cyan-500 focus:bg-white dark:focus:bg-slate-800 outline-none font-bold text-slate-800 dark:text-white transition-all shadow-sm"
                       />

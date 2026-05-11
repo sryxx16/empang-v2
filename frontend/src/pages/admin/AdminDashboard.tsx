@@ -269,7 +269,11 @@ export default function AdminDashboard() {
                   type="text"
                   placeholder="No HP (Opsional)"
                   value={offlineWa}
-                  onChange={(e) => setOfflineWa(e.target.value)}
+                  onChange={(e) => {
+                    const val = e.target.value.replace(/\D/g, "");
+                    if (val.length <= 14) setOfflineWa(val);
+                  }}
+                  maxLength={14}
                   className="flex-1 px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl font-bold text-slate-700 outline-none focus:ring-2 focus:ring-red-100"
                 />
                 <button

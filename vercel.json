@@ -23,8 +23,7 @@
             "dest": "/backend/public/storage/$1"
         },
         {
-            "src": "/(assets/.*)",
-            "dest": "/$1"
+            "handle": "filesystem"
         },
         {
             "src": "/(.*)",

@@ -23,8 +23,12 @@
             "destination": "/backend/public/storage/$1"
         },
         {
-            "source": "/(.*)\\.(js|css|svg|ico|png|jpg|jpeg|gif|woff|woff2|ttf|eot|json)$",
-            "destination": "/frontend/$1.$2"
+            "source": "/assets/(.*)",
+            "destination": "/frontend/assets/$1"
+        },
+        {
+            "source": "/vite.svg",
+            "destination": "/frontend/vite.svg"
         },
         {
             "source": "/(.*)",

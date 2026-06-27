@@ -47,15 +47,15 @@ export default function AdminLoginPage() {
       <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-cyan-500/5 blur-[120px] rounded-full pointer-events-none"></div>
 
       {/* Tombol Back ke Home */}
-      <button
+      {/* <button
         onClick={() => navigate("/")}
         className="absolute top-8 left-8 flex items-center gap-2 text-slate-400 dark:text-slate-500 hover:text-cyan-500 dark:hover:text-cyan-400 font-bold transition-all z-10"
       >
-        <ArrowLeft size={20} /> <span className="hidden sm:inline">KEMBALI</span>
-      </button>
+        <ArrowLeft size={20} /> <span className="hidden sm:inline"></span>
+      </button> */}
 
       <div className="max-w-md w-full relative z-10">
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: 30, scale: 0.95 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
           transition={{ duration: 0.5, type: "spring", bounce: 0.3 }}
@@ -65,7 +65,7 @@ export default function AdminLoginPage() {
           <div className="absolute -top-10 -right-10 w-32 h-32 bg-blue-50 dark:bg-blue-500/10 rounded-full blur-3xl opacity-50"></div>
 
           <div className="text-center mb-10 relative">
-            <motion.div 
+            <motion.div
               initial={{ scale: 0, rotate: -45 }}
               animate={{ scale: 1, rotate: 0 }}
               transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
@@ -83,7 +83,7 @@ export default function AdminLoginPage() {
 
           <AnimatePresence>
             {error && (
-              <motion.div 
+              <motion.div
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: "auto" }}
                 exit={{ opacity: 0, height: 0 }}
@@ -135,7 +135,7 @@ export default function AdminLoginPage() {
                 />
               </div>
             </div>
-            
+
             <motion.button
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}

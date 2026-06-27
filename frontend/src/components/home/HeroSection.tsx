@@ -109,7 +109,7 @@ export default function HeroSection() {
             className="relative rounded-[2rem] overflow-hidden border-[8px] sm:border-[12px] border-white dark:border-slate-800 shadow-2xl transition-all duration-500 aspect-[4/5] bg-slate-200 dark:bg-slate-700 w-full lg:max-w-[450px] ml-auto origin-center"
           >
             <img
-              src="https://images.unsplash.com/photo-1544551763-46a013bb70d5?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+              src="/gambar pemancingan.png"
               alt="Fisherman"
               className="w-full h-full object-cover"
             />

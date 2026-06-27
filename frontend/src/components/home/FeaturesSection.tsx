@@ -60,7 +60,10 @@ export default function FeaturesSection() {
             Combro Fishing tidak hanya menawarkan kolam yang nyaman, tapi juga
             pengalaman pendaftaran digital terbaik untuk para *angler*.
           </p>
-          <button className="bg-white dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 px-8 py-3 rounded-xl font-bold hover:border-blue-500 dark:hover:border-cyan-500 hover:text-blue-600 dark:hover:text-cyan-400 transition-all shadow-sm">
+          <button 
+            onClick={() => document.getElementById("galeri")?.scrollIntoView({ behavior: "smooth" })}
+            className="bg-white dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 px-8 py-3 rounded-xl font-bold hover:border-blue-500 dark:hover:border-cyan-500 hover:text-blue-600 dark:hover:text-cyan-400 transition-all shadow-sm"
+          >
             Lihat Galeri Kolam
           </button>
         </motion.div>

@@ -9,7 +9,18 @@ interface GalleryProps {
 export default function GallerySection({ images = [] }: GalleryProps) {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
-  if (!images || images.length === 0) return null;
+  let safeImages: string[] = [];
+  if (Array.isArray(images)) {
+    safeImages = images;
+  } else if (typeof images === "string") {
+    try {
+      safeImages = JSON.parse(images);
+    } catch (e) {
+      safeImages = [];
+    }
+  }
+
+  if (!safeImages || safeImages.length === 0) return null;
 
   return (
     <>
@@ -39,7 +50,7 @@ export default function GallerySection({ images = [] }: GalleryProps) {
             viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 0.6, delay: 0.2 }}
           >
-            {images.map((img, i) => (
+            {safeImages.map((img, i) => (
               <motion.div
                 key={i}
                 whileHover={{ scale: 1.02 }}

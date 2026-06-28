@@ -18,28 +18,31 @@ class AuthController extends Controller
             'password' => 'required',
         ]);
 
-        // 2. Cari user berdasarkan email
-        $user = User::where('email', $request->email)->first();
+        try {
+            $user = User::where('email', $request->email)->first();
 
-        // 3. Cek apakah user ada dan passwordnya cocok
-        if (! $user || ! Hash::check($request->password, $user->password)) {
+            if (! $user || ! Hash::check($request->password, $user->password)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Email atau password salah.'
+                ], 401);
+            }
+
+            $token = $user->createToken('auth_token')->plainTextToken;
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Login Berhasil',
+                'access_token' => $token,
+                'token_type' => 'Bearer',
+                'user' => $user
+            ]);
+        } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Email atau password salah.'
-            ], 401);
+                'message' => 'Error: ' . $e->getMessage() . ' Line: ' . $e->getLine()
+            ], 500);
         }
-
-        // 4. Buat token Sanctum (Kunci akses untuk React)
-        $token = $user->createToken('auth_token')->plainTextToken;
-
-        // 5. Kirim respon sukses ke React
-        return response()->json([
-            'success' => true,
-            'message' => 'Login Berhasil',
-            'access_token' => $token,
-            'token_type' => 'Bearer',
-            'user' => $user
-        ]);
     }
 
     public function logout(Request $request)

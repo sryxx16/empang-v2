@@ -352,27 +352,27 @@ export default function AdminRekapHybridPage() {
                       <span className="font-bold text-slate-800">
                         {b.nama_peserta}
                       </span>
-                      <div className="flex gap-2 w-full">
+                      <div className="flex gap-2 w-full mt-2">
                         <button
                           disabled={isSubmitting}
                           onClick={() => handleCheckInOnline(b, "tunai")}
-                          className="flex-1 bg-green-500 hover:bg-green-600 disabled:opacity-50 text-white text-[11px] font-black px-2 py-2 rounded-lg transition-colors"
+                          className="flex-1 bg-emerald-50 text-emerald-600 hover:bg-emerald-100 border border-emerald-200 disabled:opacity-50 text-xs font-semibold px-2 py-2 rounded-lg transition-colors flex items-center justify-center gap-1"
                         >
-                          CASH
+                          Cash
                         </button>
                         <button
                           disabled={isSubmitting}
                           onClick={() => handleCheckInOnline(b, "transfer")}
-                          className="flex-1 bg-blue-500 hover:bg-blue-600 disabled:opacity-50 text-white text-[11px] font-black px-2 py-2 rounded-lg transition-colors"
+                          className="flex-1 bg-blue-50 text-blue-600 hover:bg-blue-100 border border-blue-200 disabled:opacity-50 text-xs font-semibold px-2 py-2 rounded-lg transition-colors flex items-center justify-center gap-1"
                         >
-                          TF
+                          Transfer
                         </button>
                         <button
                           disabled={isSubmitting}
                           onClick={() => openHutangModal("online", b)}
-                          className="flex-1 bg-orange-500 hover:bg-orange-600 disabled:opacity-50 text-white text-[11px] font-black px-2 py-2 rounded-lg transition-colors"
+                          className="flex-1 bg-amber-50 text-amber-600 hover:bg-amber-100 border border-amber-200 disabled:opacity-50 text-xs font-semibold px-2 py-2 rounded-lg transition-colors flex items-center justify-center gap-1"
                         >
-                          HUTANG
+                          Hutang
                         </button>
                       </div>
                     </div>
@@ -395,30 +395,32 @@ export default function AdminRekapHybridPage() {
               placeholder="Ketik nama di sini..."
               className="w-full p-4 border-2 border-slate-200 rounded-2xl font-bold focus:border-[#ff4d4d] outline-none mb-4 bg-slate-50 text-lg text-center"
             />
-            <div className="grid grid-cols-3 gap-2">
+            <div className="flex flex-col gap-2">
               <button
                 disabled={isSubmitting || !quickName}
                 onClick={() => handleQuickAdd("tunai")}
-                className="bg-green-500 hover:bg-green-600 disabled:opacity-50 text-white p-3 rounded-xl font-black text-[11px] flex flex-col justify-center items-center gap-1 shadow-md"
+                className="w-full bg-emerald-500 hover:bg-emerald-600 disabled:opacity-50 text-white p-3 rounded-xl font-medium text-sm flex justify-center items-center gap-2 transition-colors"
               >
-                <Banknote size={16} /> LUNAS CASH
+                <Banknote size={18} /> Lunas Cash
               </button>
-              <button
-                disabled={isSubmitting || !quickName}
-                onClick={() => handleQuickAdd("transfer")}
-                className="bg-blue-500 hover:bg-blue-600 disabled:opacity-50 text-white p-3 rounded-xl font-black text-[11px] flex flex-col justify-center items-center gap-1 shadow-md"
-              >
-                <CreditCard size={16} /> LUNAS TF
-              </button>
-              <button
-                disabled={isSubmitting || !quickName}
-                onClick={() => openHutangModal("walkin")}
-                className="bg-orange-500 hover:bg-orange-600 disabled:opacity-50 text-white p-3 rounded-xl font-black text-[11px] flex flex-col justify-center items-center gap-1 shadow-md"
-              >
-                <Wallet size={16} /> HUTANG/DP
-              </button>
+              <div className="grid grid-cols-2 gap-2">
+                <button
+                  disabled={isSubmitting || !quickName}
+                  onClick={() => handleQuickAdd("transfer")}
+                  className="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 disabled:opacity-50 p-3 rounded-xl font-medium text-sm flex justify-center items-center gap-2 transition-colors"
+                >
+                  <CreditCard size={18} /> Transfer
+                </button>
+                <button
+                  disabled={isSubmitting || !quickName}
+                  onClick={() => openHutangModal("walkin")}
+                  className="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 disabled:opacity-50 p-3 rounded-xl font-medium text-sm flex justify-center items-center gap-2 transition-colors"
+                >
+                  <Wallet size={18} /> DP / Hutang
+                </button>
+              </div>
             </div>
-            <p className="text-[10px] text-center font-bold text-slate-400 mt-4 uppercase tracking-widest">
+            <p className="text-xs text-center text-slate-400 mt-4">
               Tekan Enter untuk Lunas Cash
             </p>
           </div>
@@ -550,10 +552,10 @@ export default function AdminRekapHybridPage() {
                 <button
                   type="submit"
                   disabled={isSubmitting || !partialAmount}
-                  className="w-full bg-orange-500 text-white p-4 rounded-2xl font-black shadow-lg hover:bg-orange-600 transition-colors disabled:opacity-50 mt-4"
+                  className="w-full bg-slate-900 text-white p-3 rounded-xl font-medium hover:bg-slate-800 transition-colors disabled:opacity-50 mt-4"
                 >
-                  SIMPAN DATA HUTANG
-                </button>
+                  Simpan Data Hutang
+                </button
               </form>
             </div>
           </div>
@@ -628,7 +630,7 @@ export default function AdminRekapHybridPage() {
                 <button
                   type="submit"
                   disabled={isSubmitting || !editNominal}
-                  className="w-full bg-blue-500 text-white p-4 rounded-2xl font-black shadow-lg hover:bg-blue-600 transition-colors disabled:opacity-50 mt-4 uppercase"
+                  className="w-full bg-slate-900 text-white p-3 rounded-xl font-medium hover:bg-slate-800 transition-colors disabled:opacity-50 mt-4"
                 >
                   Simpan Perubahan
                 </button>

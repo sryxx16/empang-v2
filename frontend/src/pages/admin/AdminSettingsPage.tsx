@@ -37,7 +37,20 @@ export default function AdminSettingsPage() {
       const res = await axios.get("/api/admin/settings", {
         headers: { Authorization: `Bearer ${token}` },
       });
-      setSettings(res.data);
+      
+      const data = res.data;
+      if (typeof data.potret_kami === "string") {
+        try {
+          data.potret_kami = JSON.parse(data.potret_kami);
+        } catch (e) {
+          data.potret_kami = [];
+        }
+      }
+      if (!Array.isArray(data.potret_kami)) {
+        data.potret_kami = [];
+      }
+
+      setSettings(data);
     } catch (err) {
       console.error("Gagal ambil settings", err);
     }

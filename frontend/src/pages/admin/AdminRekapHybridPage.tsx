@@ -555,7 +555,7 @@ export default function AdminRekapHybridPage() {
                   className="w-full bg-slate-900 text-white p-3 rounded-xl font-medium hover:bg-slate-800 transition-colors disabled:opacity-50 mt-4"
                 >
                   Simpan Data Hutang
-                </button
+                </button>
               </form>
             </div>
           </div>

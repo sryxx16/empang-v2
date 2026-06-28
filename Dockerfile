@@ -9,3 +9,5 @@ COPY --chown=www-data:www-data backend/ /var/www/html/
 # Install composer dependencies
 RUN composer install --no-interaction --optimize-autoloader --no-dev
 
+# Create storage symlink
+RUN php artisan storage:link

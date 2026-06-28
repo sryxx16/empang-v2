@@ -1,4 +1,4 @@
-FROM serversideup/php:8.2-fpm-nginx
+FROM serversideup/php:8.4-fpm-nginx
 
 # Change web root to Laravel's public directory
 ENV WEB_DOCUMENT_ROOT=/var/www/html/public

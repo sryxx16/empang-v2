@@ -17,6 +17,19 @@ export default function AdminLayout({
 }) {
   const location = useLocation();
   const navigate = useNavigate();
+  const [namaPemancingan, setNamaPemancingan] = React.useState("COMBRO");
+
+  React.useEffect(() => {
+    axios.get("/api/public/home")
+      .then((res) => {
+        if (res.data?.settings?.nama_pemancingan) {
+          // Ambil kata pertama atau batasi panjangnya biar muat di sidebar
+          const nama = res.data.settings.nama_pemancingan.split(" ")[0].toUpperCase();
+          setNamaPemancingan(nama);
+        }
+      })
+      .catch((err) => console.error(err));
+  }, []);
 
   const handleLogout = async () => {
     const token = localStorage.getItem("admin_token");
@@ -46,7 +59,7 @@ export default function AdminLayout({
         <div className="flex items-center gap-3 mb-10">
           <img src="/combro-fishing-logo.png" alt="Combro Admin Logo" className="h-10 w-auto" />
           <span className="font-black text-xl tracking-tighter">
-            COMBRO ADMIN
+            {namaPemancingan} ADMIN
           </span>
         </div>
 

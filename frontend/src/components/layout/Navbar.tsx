@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios";
 import { User, Moon, Sun, ChevronDown } from "lucide-react";
 import { Link } from "react-router-dom";
-
 export default function Navbar() {
   const [isDark, setIsDark] = useState(false);
+  const [namaPemancingan, setNamaPemancingan] = useState("COMBRO FISHING");
 
   useEffect(() => {
     const savedTheme = localStorage.getItem("theme");
@@ -17,6 +18,15 @@ export default function Navbar() {
       setIsDark(false);
       document.documentElement.classList.remove("dark");
     }
+
+    // Fetch nama pemancingan
+    axios.get("/api/public/home")
+      .then((res) => {
+        if (res.data?.settings?.nama_pemancingan) {
+          setNamaPemancingan(res.data.settings.nama_pemancingan);
+        }
+      })
+      .catch((err) => console.error("Gagal load setting Navbar:", err));
   }, []);
 
   const toggleTheme = () => {
@@ -41,7 +51,7 @@ export default function Navbar() {
             className="h-10 w-auto"
           />
           <span className="text-xl md:text-2xl font-black text-slate-900 dark:text-white tracking-tighter uppercase transition-colors duration-300">
-            COMBRO FISHING
+            {namaPemancingan}
           </span>
         </Link>
 

@@ -59,7 +59,7 @@ export default function AdminRekapHybridPage() {
       const closedLombas = res.data.filter((l: any) => !l.is_active);
       setLombas(closedLombas);
       if (closedLombas.length > 0) {
-        setSelectedLombaId(closedLombas[0].id);
+        setSelectedLombaId(closedLombas[0].id.toString());
       } else {
         setSelectedLombaId("");
       }
@@ -333,11 +333,11 @@ export default function AdminRekapHybridPage() {
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* KOLOM 1: ANTREAN ONLINE (DARI WEB) */}
-          <div className="bg-white rounded-3xl shadow-sm border border-slate-200 p-6 h-fit max-h-[600px] overflow-y-auto">
-            <h2 className="text-lg font-black mb-4 uppercase text-blue-700 flex items-center gap-2 sticky top-0 bg-white pb-2 border-b z-10">
-              <UserPlus size={20} /> Antrean Web Sesi Ini
+          <div className="bg-white rounded-3xl shadow-sm border border-slate-200 h-fit max-h-[600px] overflow-y-auto relative">
+            <h2 className="text-lg font-black mb-4 uppercase text-blue-700 flex items-center gap-2 sticky top-0 bg-white p-6 border-b border-slate-100 z-10">
+              <UserPlus size={20} /> Menunggu Check-In (Web)
             </h2>
-            <div className="space-y-3">
+            <div className="space-y-3 px-6 pb-6">
               {onlineBookings.filter(
                 (b) => !rekaps.some((r) => r.nama_peserta === b.nama_peserta),
               ).length === 0 ? (
@@ -432,8 +432,8 @@ export default function AdminRekapHybridPage() {
           </div>
 
           {/* KOLOM 3: REKAP FINAL (LUNAS & HUTANG) */}
-          <div className="bg-white rounded-3xl shadow-sm border border-slate-200 p-6 h-fit max-h-[600px] overflow-y-auto">
-            <h2 className="text-lg font-black mb-4 uppercase text-green-700 border-b pb-4 flex items-center justify-between sticky top-0 bg-white z-10">
+          <div className="bg-white rounded-3xl shadow-sm border border-slate-200 h-fit max-h-[600px] overflow-y-auto relative">
+            <h2 className="text-lg font-black uppercase text-green-700 border-b border-slate-100 p-6 flex items-center justify-between sticky top-0 bg-white z-10">
               <span className="flex items-center gap-2">
                 <CheckCircle size={20} /> Rekap Sesi Ini
               </span>
@@ -441,7 +441,7 @@ export default function AdminRekapHybridPage() {
                 {rekaps.length}
               </span>
             </h2>
-            <ul className="space-y-2 mt-2">
+            <ul className="space-y-2 p-6">
               {rekaps.length === 0 ? (
                 <p className="text-xs font-bold text-slate-400 text-center py-10 italic">
                   Belum ada rekap peserta.
@@ -549,10 +549,14 @@ export default function AdminRekapHybridPage() {
                     placeholder="Contoh: 50000"
                     className="w-full p-4 bg-slate-50 border-2 border-slate-200 rounded-2xl font-bold outline-none focus:border-orange-500 text-xl"
                   />
-                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-2">
-                    Harga Tiket Full: Rp{" "}
-                    {(activeLomba?.harga_tiket || 0).toLocaleString("id-ID")}
+                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-3">
+                    Harga Tiket Full: Rp {(activeLomba?.harga_tiket || 0).toLocaleString("id-ID")}
                   </p>
+                  {partialAmount && (
+                    <p className={`text-xs font-black uppercase tracking-widest mt-1 ${((activeLomba?.harga_tiket || 0) - Number(partialAmount)) > 0 ? "text-red-500" : "text-green-500"}`}>
+                      Sisa Hutang: Rp {Math.max(0, (activeLomba?.harga_tiket || 0) - Number(partialAmount)).toLocaleString("id-ID")}
+                    </p>
+                  )}
                 </div>
 
                 <button
@@ -600,9 +604,14 @@ export default function AdminRekapHybridPage() {
                     onChange={(e) => setEditNominal(e.target.value)}
                     className="w-full p-4 bg-slate-50 border-2 border-slate-200 rounded-2xl font-bold outline-none focus:border-blue-500 text-xl"
                   />
-                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-2">
+                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-3">
                     Harga Tiket Full: Rp {(activeLomba?.harga_tiket || 0).toLocaleString("id-ID")}
                   </p>
+                  {editNominal && (
+                    <p className={`text-xs font-black uppercase tracking-widest mt-1 ${((activeLomba?.harga_tiket || 0) - Number(editNominal)) > 0 ? "text-red-500" : "text-green-500"}`}>
+                      Sisa Hutang: Rp {Math.max(0, (activeLomba?.harga_tiket || 0) - Number(editNominal)).toLocaleString("id-ID")}
+                    </p>
+                  )}
                 </div>
 
                 <div>

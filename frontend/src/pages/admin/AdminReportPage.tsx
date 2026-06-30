@@ -162,7 +162,7 @@ export default function AdminReportPage() {
         </div>
 
         {/* 1. RINGKASAN KARTU UTAMA */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-10">
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-6 mb-10">
           <div className="bg-slate-900 text-white p-6 rounded-[32px] shadow-xl">
             <div className="flex justify-between items-start mb-4">
               <div className="bg-white/10 p-3 rounded-2xl">
@@ -215,6 +215,18 @@ export default function AdminReportPage() {
             </h3>
             <p className="text-xs text-slate-500 mt-2">
               {data.summary.persen_transfer}% dari total
+            </p>
+          </div>
+
+          <div className="bg-orange-50 p-6 rounded-[32px] border border-orange-200 shadow-sm">
+            <p className="text-[10px] font-black text-orange-600 uppercase tracking-widest mb-4 flex items-center gap-2">
+              <Wallet className="text-orange-500" size={14} /> Piutang (Hutang)
+            </p>
+            <h3 className="text-xl font-black text-orange-900">
+              Rp {(data.summary.total_hutang || 0).toLocaleString("id-ID")}
+            </h3>
+            <p className="text-xs text-orange-700 mt-2 font-medium">
+              Belum dilunasi peserta
             </p>
           </div>
         </div>
@@ -277,7 +289,8 @@ export default function AdminReportPage() {
                   <tr>
                     <th className="p-4">Tanggal</th>
                     <th className="p-4">Peserta</th>
-                    <th className="p-4 text-right">Total</th>
+                    <th className="p-4 text-right">Sisa Hutang</th>
+                    <th className="p-4 text-right">Lunas Masuk</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100 font-bold text-sm">
@@ -289,6 +302,9 @@ export default function AdminReportPage() {
                       <td className="p-4 text-slate-700">{d.tanggal}</td>
                       <td className="p-4 text-slate-500">
                         {d.jumlah_peserta} Orang
+                      </td>
+                      <td className="p-4 text-right text-orange-500">
+                        Rp {Number(d.hutang || 0).toLocaleString("id-ID")}
                       </td>
                       <td className="p-4 text-right text-green-600">
                         Rp {Number(d.total_pendapatan).toLocaleString("id-ID")}
@@ -326,9 +342,8 @@ export default function AdminReportPage() {
                     <p className="text-lg font-black text-slate-900">
                       Rp {Number(m.total_pendapatan).toLocaleString("id-ID")}
                     </p>
-                    <p className="text-[10px] text-slate-500 mt-1">
-                      Tunai: Rp {Number(m.cash).toLocaleString("id-ID")} | TF:
-                      Rp {Number(m.transfer).toLocaleString("id-ID")}
+                    <p className="text-[10px] text-slate-500 mt-1 font-bold">
+                      Tunai: Rp {Number(m.cash).toLocaleString("id-ID")} | TF: Rp {Number(m.transfer).toLocaleString("id-ID")} | <span className="text-orange-500">Hutang: Rp {Number(m.hutang || 0).toLocaleString("id-ID")}</span>
                     </p>
                   </div>
                 </div>

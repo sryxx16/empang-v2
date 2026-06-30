@@ -28,6 +28,7 @@ class ReportController extends Controller
         $totalPeserta = $query->count();
         $totalCash = (clone $query)->where('metode_bayar', 'tunai')->sum('nominal_bayar');
         $totalTF = (clone $query)->where('metode_bayar', 'transfer')->sum('nominal_bayar');
+        $totalHutang = (clone $query)->where('status_bayar', 'debt')->sum(DB::raw('harga_tiket - nominal_bayar'));
 
         $persenCash = $totalRevenue > 0 ? round(($totalCash / $totalRevenue) * 100, 1) : 0;
         $persenTransfer = $totalRevenue > 0 ? round(($totalTF / $totalRevenue) * 100, 1) : 0;
@@ -48,7 +49,8 @@ class ReportController extends Controller
             DB::raw('COUNT(*) as jumlah_peserta'),
             DB::raw('SUM(nominal_bayar) as total_pendapatan'),
             DB::raw('SUM(CASE WHEN metode_bayar = "tunai" THEN nominal_bayar ELSE 0 END) as cash'),
-            DB::raw('SUM(CASE WHEN metode_bayar = "transfer" THEN nominal_bayar ELSE 0 END) as transfer')
+            DB::raw('SUM(CASE WHEN metode_bayar = "transfer" THEN nominal_bayar ELSE 0 END) as transfer'),
+            DB::raw('SUM(CASE WHEN status_bayar = "debt" THEN (harga_tiket - nominal_bayar) ELSE 0 END) as hutang')
         )
         ->groupBy('tanggal')
         ->orderBy('tanggal', 'desc')
@@ -70,7 +72,8 @@ class ReportController extends Controller
             DB::raw('COUNT(*) as jumlah_peserta'),
             DB::raw('SUM(nominal_bayar) as total_pendapatan'),
             DB::raw('SUM(CASE WHEN metode_bayar = "tunai" THEN nominal_bayar ELSE 0 END) as cash'),
-            DB::raw('SUM(CASE WHEN metode_bayar = "transfer" THEN nominal_bayar ELSE 0 END) as transfer')
+            DB::raw('SUM(CASE WHEN metode_bayar = "transfer" THEN nominal_bayar ELSE 0 END) as transfer'),
+            DB::raw('SUM(CASE WHEN status_bayar = "debt" THEN (harga_tiket - nominal_bayar) ELSE 0 END) as hutang')
         )
         ->groupBy('bulan')
         ->orderBy('bulan', 'desc')
@@ -82,6 +85,7 @@ class ReportController extends Controller
             'summary' => [
                 'total_revenue' => $totalRevenue,
                 'total_peserta' => $totalPeserta,
+                'total_hutang' => $totalHutang,
                 'cash' => $totalCash,
                 'transfer' => $totalTF,
                 'persen_cash' => $persenCash,

@@ -9,6 +9,7 @@ import {
   LogOut,
   Calendar, // <-- Ini icon baru buat Jadwal Lomba
 } from "lucide-react";
+import LiveClock from "../layout/LiveClock";
 
 export default function AdminLayout({
   children,
@@ -56,11 +57,14 @@ export default function AdminLayout({
       {/* SIDEBAR (Hanya ditulis 1x di sini)         */}
       {/* ========================================== */}
       <aside className="w-64 bg-slate-900 text-white p-6 hidden lg:flex flex-col print:hidden sticky top-0 h-screen">
-        <div className="flex items-center gap-3 mb-10">
-          <img src="/combro-fishing-logo.png" alt="Combro Admin Logo" className="h-10 w-auto" />
-          <span className="font-black text-xl tracking-tighter">
-            {namaPemancingan} ADMIN
-          </span>
+        <div className="mb-10">
+          <div className="flex items-center gap-3 mb-2">
+            <img src="/combro-fishing-logo.png" alt="Combro Admin Logo" className="h-10 w-auto" />
+            <span className="font-black text-xl tracking-tighter">
+              {namaPemancingan} ADMIN
+            </span>
+          </div>
+          <LiveClock className="text-slate-400 text-sm bg-slate-800/50 py-2 px-3 rounded-xl border border-slate-700 w-max" />
         </div>
 
         <nav className="flex-grow space-y-2">

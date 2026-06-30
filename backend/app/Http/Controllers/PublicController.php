@@ -42,8 +42,27 @@ class PublicController extends Controller
         $request->validate([
             'lomba_id' => 'required|exists:lombas,id',
             'nama_peserta' => 'required|string',
-            'no_wa' => 'required|string' // Sesuai dengan database awal lu
+            'no_wa' => 'required|string'
         ]);
+
+        // CEK NAMA DUPLIKAT (di Antrean Booking & di Kasir/Rekap)
+        $namaLower = strtolower(trim($request->nama_peserta));
+        
+        $bookingExists = Booking::where('lomba_id', $request->lomba_id)
+            ->whereRaw('LOWER(nama_peserta) = ?', [$namaLower])
+            ->whereIn('status', ['pending', 'verified'])
+            ->exists();
+
+        $rekapExists = \App\Models\Rekap::where('lomba_id', $request->lomba_id)
+            ->whereRaw('LOWER(nama_peserta) = ?', [$namaLower])
+            ->exists();
+
+        if ($bookingExists || $rekapExists) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Nama sudah dipakai! Silakan gunakan nama lain (Misal: Udin 2 atau Udin Keren)'
+            ], 400); // 400 Bad Request
+        }
 
         $booking = Booking::create([
             'lomba_id' => $request->lomba_id,

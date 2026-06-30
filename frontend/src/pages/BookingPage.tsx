@@ -72,9 +72,13 @@ export default function BookingPage() {
         kode: res.data.kode_booking,
         lomba: bookedLomba,
       });
-    } catch (err) {
+    } catch (err: any) {
       console.error(err);
-      alert("Gagal melakukan pendaftaran. Silakan coba lagi.");
+      if (err.response && err.response.data && err.response.data.message) {
+        alert(err.response.data.message);
+      } else {
+        alert("Gagal melakukan pendaftaran. Silakan coba lagi.");
+      }
     } finally {
       setIsSubmitting(false);
     }

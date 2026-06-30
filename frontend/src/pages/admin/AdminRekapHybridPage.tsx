@@ -55,7 +55,8 @@ export default function AdminRekapHybridPage() {
       const res = await axios.get("/api/admin/lombas", {
         headers: { Authorization: `Bearer ${token}` },
       });
-      const closedLombas = res.data.filter((l: any) => l.is_active === false);
+      // Fix strict equality: MySQL returns 0/1, so we use !l.is_active instead of === false
+      const closedLombas = res.data.filter((l: any) => !l.is_active);
       setLombas(closedLombas);
       if (closedLombas.length > 0) {
         setSelectedLombaId(closedLombas[0].id);

@@ -21,12 +21,14 @@ class LombaController extends Controller
         $request->validate([
             'nama_lomba' => 'required|string',
             'tanggal_lomba' => 'required|date',
+            'jam_lomba' => 'nullable|string',
             'harga_tiket' => 'required|numeric',
         ]);
 
         $lomba = Lomba::create([
             'nama_lomba' => $request->nama_lomba,
             'tanggal_lomba' => $request->tanggal_lomba,
+            'jam_lomba' => $request->jam_lomba,
             'harga_tiket' => $request->harga_tiket,
             'kuota' => 34, // Sesuai lapak lu
             'is_active' => true

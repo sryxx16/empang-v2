@@ -12,6 +12,7 @@ class Lomba extends Model
     protected $fillable = [
         'nama_lomba',
         'tanggal_lomba',
+        'jam_lomba',
         'harga_tiket',
         'kuota',
         'is_active'

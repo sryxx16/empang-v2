@@ -18,6 +18,7 @@ export default function AdminLombaPage() {
   const [newLomba, setNewLomba] = useState({
     nama_lomba: "",
     tanggal_lomba: "",
+    jam_lomba: "",
     harga_tiket: 150000,
     kuota: 34,
   });
@@ -158,9 +159,16 @@ export default function AdminLombaPage() {
                   {l.is_active ? "BUKA" : "TUTUP"}
                 </span>
               </div>
-              <p className="text-slate-500 font-bold text-sm mb-4">
-                {l.tanggal_lomba}
-              </p>
+              <div className="flex flex-col gap-1 mb-4">
+                <p className="text-slate-500 font-bold text-sm">
+                  {l.tanggal_lomba}
+                </p>
+                {l.jam_lomba && (
+                  <p className="text-blue-500 font-bold text-xs uppercase tracking-widest bg-blue-50 w-max px-2 py-1 rounded-md">
+                    {l.jam_lomba}
+                  </p>
+                )}
+              </div>
 
               <div className="space-y-2 border-t pt-4">
                 <div className="flex justify-between text-sm font-bold">
@@ -199,14 +207,24 @@ export default function AdminLombaPage() {
                   }
                   required
                 />
-                <input
-                  type="date"
-                  className="w-full p-4 bg-slate-50 border rounded-2xl font-bold outline-none focus:border-[#ff4d4d]"
-                  onChange={(e) =>
-                    setNewLomba({ ...newLomba, tanggal_lomba: e.target.value })
-                  }
-                  required
-                />
+                <div className="grid grid-cols-2 gap-4">
+                  <input
+                    type="date"
+                    className="w-full p-4 bg-slate-50 border rounded-2xl font-bold outline-none focus:border-[#ff4d4d]"
+                    onChange={(e) =>
+                      setNewLomba({ ...newLomba, tanggal_lomba: e.target.value })
+                    }
+                    required
+                  />
+                  <input
+                    type="text"
+                    placeholder="Jam Lomba (contoh: 08:00 - 15:00)"
+                    className="w-full p-4 bg-slate-50 border rounded-2xl font-bold outline-none focus:border-[#ff4d4d]"
+                    onChange={(e) =>
+                      setNewLomba({ ...newLomba, jam_lomba: e.target.value })
+                    }
+                  />
+                </div>
                 <div className="grid grid-cols-2 gap-4">
                   <input
                     type="number"

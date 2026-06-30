@@ -10,6 +10,7 @@ interface Lomba {
   id: string | number;
   nama_lomba: string;
   tanggal_lomba: string;
+  jam_lomba?: string;
   terisi: number;
   kuota: number;
   harga_tiket: number;
@@ -112,8 +113,15 @@ export default function JadwalPage() {
                     <h3 className="text-xl font-black text-slate-900 dark:text-white uppercase leading-tight">
                       {lomba.nama_lomba}
                     </h3>
-                    <div className="bg-blue-100 dark:bg-cyan-900/50 text-blue-700 dark:text-cyan-400 text-xs font-black px-3 py-1.5 rounded-full whitespace-nowrap shrink-0">
-                      {lomba.tanggal_lomba}
+                    <div className="flex flex-col items-end gap-1 shrink-0">
+                      <div className="bg-blue-100 dark:bg-cyan-900/50 text-blue-700 dark:text-cyan-400 text-xs font-black px-3 py-1.5 rounded-full whitespace-nowrap">
+                        {lomba.tanggal_lomba}
+                      </div>
+                      {lomba.jam_lomba && (
+                        <div className="bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 text-[10px] font-black px-2 py-1 rounded-md">
+                          {lomba.jam_lomba}
+                        </div>
+                      )}
                     </div>
                   </div>
 

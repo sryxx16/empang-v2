@@ -188,7 +188,7 @@ export default function AdminDashboard() {
             >
               {lombas.map((l) => (
                 <option key={l.id} value={l.id}>
-                  {l.tanggal_lomba} — {l.nama_lomba}
+                  {l.tanggal_lomba} {l.jam_lomba ? `(${l.jam_lomba})` : ''} — {l.nama_lomba}
                 </option>
               ))}
             </select>

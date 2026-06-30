@@ -8,6 +8,7 @@ import {
   Trash2,
   Edit3,
   Users,
+  PowerOff,
 } from "lucide-react";
 import AdminLayout from "../../components/admin/AdminLayout";
 
@@ -68,6 +69,30 @@ export default function AdminLombaPage() {
     }
   };
 
+  const handleToggleStatus = async (id: number, currentStatus: boolean) => {
+    if (
+      !window.confirm(
+        currentStatus
+          ? "Tutup pendaftaran untuk sesi ini? (Sesi ini akan hilang dari halaman form booking)"
+          : "Buka kembali pendaftaran untuk sesi ini? (Sesi ini akan muncul lagi di halaman form booking)"
+      )
+    )
+      return;
+      
+    try {
+      await axios.patch(
+        `/api/admin/lombas/${id}/toggle-status`,
+        {},
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      fetchLombas();
+    } catch (err) {
+      alert("Gagal merubah status lomba");
+    }
+  };
+
   return (
     <AdminLayout>
       <main className="flex-grow p-8 bg-slate-50 min-h-screen">
@@ -98,16 +123,41 @@ export default function AdminLombaPage() {
                 <div className="bg-red-50 p-3 rounded-2xl text-[#ff4d4d]">
                   <Calendar size={24} />
                 </div>
-                <button
-                  onClick={() => handleDelete(l.id)}
-                  className="text-slate-300 hover:text-red-500 transition-colors"
-                >
-                  <Trash2 size={20} />
-                </button>
+                <div className="flex items-center gap-3">
+                  <button
+                    onClick={() => handleToggleStatus(l.id, l.is_active)}
+                    title={l.is_active ? "Tutup Pendaftaran" : "Buka Pendaftaran"}
+                    className={`${
+                      l.is_active
+                        ? "text-slate-400 hover:text-orange-500"
+                        : "text-green-500 hover:text-green-600"
+                    } transition-colors`}
+                  >
+                    <PowerOff size={20} />
+                  </button>
+                  <button
+                    onClick={() => handleDelete(l.id)}
+                    title="Hapus Lomba"
+                    className="text-slate-300 hover:text-red-500 transition-colors"
+                  >
+                    <Trash2 size={20} />
+                  </button>
+                </div>
               </div>
-              <h3 className="text-xl font-black text-slate-800 uppercase mb-1">
-                {l.nama_lomba}
-              </h3>
+              <div className="flex items-center gap-2 mb-1">
+                <h3 className="text-xl font-black text-slate-800 uppercase">
+                  {l.nama_lomba}
+                </h3>
+                <span
+                  className={`text-[10px] font-black px-2 py-1 rounded-full uppercase tracking-widest ${
+                    l.is_active
+                      ? "bg-green-100 text-green-600"
+                      : "bg-slate-100 text-slate-500"
+                  }`}
+                >
+                  {l.is_active ? "BUKA" : "TUTUP"}
+                </span>
+              </div>
               <p className="text-slate-500 font-bold text-sm mb-4">
                 {l.tanggal_lomba}
               </p>

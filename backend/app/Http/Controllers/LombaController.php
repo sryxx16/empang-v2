@@ -60,4 +60,17 @@ public function destroy($id)
             'message' => 'Jadwal Lomba berhasil dihapus!'
         ]);
     }
+
+    public function toggleStatus($id)
+    {
+        $lomba = Lomba::findOrFail($id);
+        $lomba->is_active = !$lomba->is_active;
+        $lomba->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Status pendaftaran berhasil diubah!',
+            'is_active' => $lomba->is_active
+        ]);
+    }
 }

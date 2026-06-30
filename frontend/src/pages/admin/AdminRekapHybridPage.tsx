@@ -134,6 +134,12 @@ export default function AdminRekapHybridPage() {
   };
 
   const handleCheckInOnline = async (booking: any, metode: string) => {
+    if (booking.status === "pending") {
+      if (!window.confirm(`Pendaftaran atas nama ${booking.nama_peserta} BELUM di-ACC (Pending)!\n\nApakah Anda yakin ingin melakukan check-in?`)) {
+        return;
+      }
+    }
+
     setIsSubmitting(true);
     try {
       await axios.post(
@@ -161,6 +167,12 @@ export default function AdminRekapHybridPage() {
 
   // --- FUNGSI HUTANG ---
   const openHutangModal = (tipe: "online" | "walkin", data?: any) => {
+    if (tipe === "online" && data.status === "pending") {
+      if (!window.confirm(`Pendaftaran atas nama ${data.nama_peserta} BELUM di-ACC (Pending)!\n\nApakah Anda yakin ingin melanjutkan input DP/Hutang?`)) {
+        return;
+      }
+    }
+
     if (tipe === "walkin" && !quickName.trim()) {
       inputRef.current?.focus();
       return;
@@ -355,9 +367,20 @@ export default function AdminRekapHybridPage() {
                       key={b.id}
                       className="bg-blue-50 border border-blue-100 p-4 rounded-2xl flex flex-col gap-3"
                     >
-                      <span className="font-bold text-slate-800">
-                        {b.nama_peserta}
-                      </span>
+                      <div className="flex justify-between items-start">
+                        <span className="font-bold text-slate-800">
+                          {b.nama_peserta}
+                        </span>
+                        {b.status === "pending" ? (
+                          <span className="bg-yellow-100 text-yellow-700 text-[9px] px-2 py-0.5 rounded font-black uppercase tracking-wider">
+                            Belum ACC
+                          </span>
+                        ) : (
+                          <span className="bg-emerald-100 text-emerald-700 text-[9px] px-2 py-0.5 rounded font-black uppercase tracking-wider">
+                            Verified
+                          </span>
+                        )}
+                      </div>
                       <div className="flex gap-2 w-full mt-2">
                         <button
                           disabled={isSubmitting}

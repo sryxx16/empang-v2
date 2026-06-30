@@ -55,8 +55,13 @@ export default function AdminRekapHybridPage() {
       const res = await axios.get("/api/admin/lombas", {
         headers: { Authorization: `Bearer ${token}` },
       });
-      setLombas(res.data);
-      if (res.data.length > 0) setSelectedLombaId(res.data[0].id);
+      const closedLombas = res.data.filter((l: any) => l.is_active === false);
+      setLombas(closedLombas);
+      if (closedLombas.length > 0) {
+        setSelectedLombaId(closedLombas[0].id);
+      } else {
+        setSelectedLombaId("");
+      }
     } catch (err) {
       console.error(err);
     }
@@ -314,7 +319,7 @@ export default function AdminRekapHybridPage() {
               className="w-full pl-12 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl font-bold text-slate-700 outline-none cursor-pointer focus:ring-2 focus:ring-red-100"
             >
               {lombas.length === 0 && (
-                <option value="">Belum ada jadwal lomba</option>
+                <option value="">Belum ada jadwal yang ditutup pendaftarannya</option>
               )}
               {lombas.map((l) => (
                 <option key={l.id} value={l.id}>

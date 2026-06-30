@@ -4,7 +4,6 @@ import { Calendar, Users, Trophy, AlertCircle } from "lucide-react";
 import Navbar from "../components/layout/Navbar";
 import Footer from "../components/layout/Footer";
 import { motion } from "framer-motion";
-import LiveClock from "../components/layout/LiveClock";
 
 // 1. Tambahkan Interface biar TypeScript-nya rapi (gak pakai any)
 interface Lomba {
@@ -113,11 +112,8 @@ export default function JadwalPage() {
                     <h3 className="text-xl font-black text-slate-900 dark:text-white uppercase leading-tight">
                       {lomba.nama_lomba}
                     </h3>
-                    <div className="flex flex-col items-end gap-1 shrink-0">
-                      <div className="bg-blue-100 dark:bg-cyan-900/50 text-blue-700 dark:text-cyan-400 text-xs font-black px-3 py-1.5 rounded-full whitespace-nowrap">
-                        {lomba.tanggal_lomba}
-                      </div>
-                      <LiveClock className="text-[10px] text-slate-500 bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded-md" />
+                    <div className="bg-blue-100 dark:bg-cyan-900/50 text-blue-700 dark:text-cyan-400 text-xs font-black px-3 py-1.5 rounded-full whitespace-nowrap shrink-0">
+                      {lomba.tanggal_lomba}
                     </div>
                   </div>
 

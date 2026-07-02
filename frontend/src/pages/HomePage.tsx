@@ -14,6 +14,7 @@ import ProcessSection from "../components/home/ProcessSection";
 import GallerySection from "../components/home/GallerySection";
 import TestimonialsFAQ from "../components/home/TestimonialsFAQ";
 import RulesSection from "../components/shared/RulesSection";
+import LapakLayoutSection from "../components/home/LapakLayoutSection";
 
 export default function HomePage() {
   const [data, setData] = useState<any>(null);
@@ -179,6 +180,7 @@ export default function HomePage() {
       {/* 3. KOMPONEN LAMA LU TETAP AMAN DI SINI */}
       <div id="fasilitas"><FeaturesSection /></div>
       <div id="tentang-kami"><AboutSection /></div>
+      <div id="denah-lapak"><LapakLayoutSection /></div>
       <div id="cara-booking"><ProcessSection /></div>
       <div id="peraturan"><RulesSection /></div>
       <div id="galeri"><GallerySection images={data?.settings?.potret_kami} /></div>

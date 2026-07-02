@@ -13,6 +13,7 @@ import AboutSection from "../components/home/AboutSection";
 import ProcessSection from "../components/home/ProcessSection";
 import GallerySection from "../components/home/GallerySection";
 import TestimonialsFAQ from "../components/home/TestimonialsFAQ";
+import RulesSection from "../components/shared/RulesSection";
 
 export default function HomePage() {
   const [data, setData] = useState<any>(null);
@@ -179,6 +180,7 @@ export default function HomePage() {
       <div id="fasilitas"><FeaturesSection /></div>
       <div id="tentang-kami"><AboutSection /></div>
       <div id="cara-booking"><ProcessSection /></div>
+      <div id="peraturan"><RulesSection /></div>
       <div id="galeri"><GallerySection images={data?.settings?.potret_kami} /></div>
       <div id="faq"><TestimonialsFAQ /></div>
 

@@ -273,8 +273,8 @@ export default function BookingPage() {
                               >
                                 {l.nama_lomba}
                               </h3>
-                              <p className="text-xs font-bold text-slate-400 flex items-center gap-1 mt-1">
-                                <Clock size={12} /> {l.tanggal_lomba} • Rp{" "}
+                              <p className="text-xs font-bold text-slate-400 flex items-center gap-1 mt-1 flex-wrap">
+                                <Clock size={12} /> {l.tanggal_lomba} {l.jam_lomba ? `• ${l.jam_lomba}` : ""} • Rp{" "}
                                 {(l.harga_tiket || 0).toLocaleString("id-ID")}
                               </p>
                             </div>

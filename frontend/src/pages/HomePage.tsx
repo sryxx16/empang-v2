@@ -149,7 +149,7 @@ export default function HomePage() {
                         {l.nama_lomba}
                       </p>
                       <p className="text-[11px] font-bold text-slate-400 uppercase tracking-wider mt-1">
-                        {l.tanggal_lomba}
+                        {l.tanggal_lomba} {l.jam_lomba ? `• ${l.jam_lomba}` : ""}
                       </p>
                     </div>
                     <div className="text-right">
